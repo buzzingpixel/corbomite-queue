@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  php:
+    image: buzzingpixel/php7.2:latest
+    container_name: php-corbomite-queue
+    environment:
+      HOSTNAME: php-corbomite-queue
+    user: "1000:50"
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - ./dev/null:/app/node_modules:delegated
+      - ./serverConfig/php/php-custom-config.ini:/usr/local/etc/php/conf.d/php-custom-config.ini:delegated
+      - ./serverConfig/php/php-config-dev.ini:/usr/local/etc/php/conf.d/php-env-config.ini:delegated
+  db:
+    image: buzzingpixel/mariadb:latest
+    container_name: db-corbomite-queue
+    restart: always
+    environment:
+      HOSTNAME: db-corbomite-queue
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: site
+      MYSQL_DATABASE: site
+      MYSQL_PASSWORD: secret
+    user: "1000:50"
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - ./dev/null:/app/node_modules:delegated
+      - ./db:/var/lib/mysql:delegated
+    ports:
+      - "17296:3306"
