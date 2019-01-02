@@ -1,0 +1,29 @@
+{
+    "name": "buzzingpixel/corbomite-queue",
+    "version": "1.0.0",
+    "description": "Corbomite queue",
+    "authors": [
+        {
+            "name": "TJ Draper",
+            "email": "tj@buzzingpixel.com",
+            "homepage": "https://buzzingpixel.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.4",
+        "phpmd/phpmd": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "corbomite\\queue\\": "src"
+        }
+    },
+    "extra": {
+        "diConfigFilePath": "src/diConfig.php",
+        "cliActionConfigFilePath": "src/actionConfig.php"
+    }
+}
