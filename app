@@ -9,6 +9,13 @@ define('ENTRY_POINT', 'app');
 define('APP_BASE_PATH', __DIR__);
 define('APP_VENDOR_PATH', APP_BASE_PATH . '/vendor');
 
+putenv('DB_HOST=db');
+putenv('DB_DATABASE=site');
+putenv('DB_USER=site');
+putenv('DB_PASSWORD=secret');
+putenv('CORBOMITE_DB_DATA_NAMESPACE=corbomite\queue\data');
+putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
+
 require APP_VENDOR_PATH . '/autoload.php';
 
 /** @noinspection PhpUnhandledExceptionInspection */
