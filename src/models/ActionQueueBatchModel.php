@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace corbomite\queue\models;
 
 use DateTime;
-use corbomite\queue\models\ActionQueueItemModel;
 
 class ActionQueueBatchModel
 {
