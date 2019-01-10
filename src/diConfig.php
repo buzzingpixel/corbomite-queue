@@ -8,6 +8,7 @@ use corbomite\db\Factory as OrmFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
 use corbomite\queue\services\AddBatchToQueueService;
+use corbomite\queue\services\GetNextQueueItemService;
 
 return [
     CreateMigrationsAction::class => function () {
@@ -21,5 +22,8 @@ return [
     },
     AddBatchToQueueService::class => function () {
         return new AddBatchToQueueService(new OrmFactory(), new UuidFactory());
+    },
+    GetNextQueueItemService::class => function () {
+        return new GetNextQueueItemService(new OrmFactory());
     },
 ];

@@ -7,6 +7,7 @@ use corbomite\di\Di;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\models\ActionQueueBatchModel;
 use corbomite\queue\services\AddBatchToQueueService;
+use corbomite\queue\services\GetNextQueueItemService;
 
 class QueueApi
 {
@@ -29,8 +30,13 @@ class QueueApi
 
     public function addToQueue(ActionQueueBatchModel $model): void
     {
-        /** @var AddBatchToQueueService $service */
         $service = $this->di->getFromDefinition(AddBatchToQueueService::class);
         $service($model);
+    }
+
+    public function getNextQueueItem(bool $markAsStarted = false): ?ActionQueueItemModel
+    {
+        $service = $this->di->getFromDefinition(GetNextQueueItemService::class);
+        return $service($markAsStarted);
     }
 }

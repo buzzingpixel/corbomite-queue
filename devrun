@@ -51,4 +51,14 @@ function testAddToQueue() {
     $queueApi->addToQueue($batchModel);
 }
 
-testAddToQueue();
+// testAddToQueue();
+
+function testGetNextQueueItem() {
+    $queueApi = Di::get(QueueApi::class);
+
+    $item = $queueApi->getNextQueueItem();
+
+    var_dump($item);
+}
+
+// testGetNextQueueItem();
