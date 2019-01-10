@@ -5,6 +5,7 @@ use corbomite\di\Di;
 use Ramsey\Uuid\UuidFactory;
 use corbomite\queue\QueueApi;
 use corbomite\db\Factory as OrmFactory;
+use corbomite\queue\actions\RunQueueAction;
 use corbomite\queue\services\MarkItemAsRunService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
@@ -19,6 +20,9 @@ return [
             __DIR__ . '/migrations',
             new ConsoleOutput()
         );
+    },
+    RunQueueAction::class => function () {
+        return new RunQueueAction(new Di());
     },
     QueueApi::class => function () {
         return new QueueApi(new Di());
