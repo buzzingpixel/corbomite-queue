@@ -47,28 +47,28 @@ use corbomite\queue\QueueApi;
 $queueApi = Di::get(QueueApi::class);
 
 $batchModel = $queueApi->makeActionQueueBatchModel([
-        'name' => 'this_is_a_test',
-        'title' => 'This is a Test',
-        'items' => [
-            $queueApi->makeActionQueueItemModel([
-                'class' => \some\ClassThing::class,
-            ]),
-            $queueApi->makeActionQueueItemModel([
-                'class' => \another\ClassThing::class,
-            ]),
-            $queueApi->makeActionQueueItemModel([
-                'class' => \more\Classes::class,
-                'method' => 'someMethod', // If method is not specified, --invoke is assumed
-                // Provide anything you want in this array, your method will receive it as an argument
-                'context' => [
-                    'stuff' => 'thing',
-                ],
-            ]),
-        ],
-    ]);
+    'name' => 'this_is_a_test',
+    'title' => 'This is a Test',
+    'items' => [
+        $queueApi->makeActionQueueItemModel([
+            'class' => \some\ClassThing::class,
+        ]),
+        $queueApi->makeActionQueueItemModel([
+            'class' => \another\ClassThing::class,
+        ]),
+        $queueApi->makeActionQueueItemModel([
+            'class' => \more\Classes::class,
+            'method' => 'someMethod', // If method is not specified, --invoke is assumed
+            // Provide anything you want in this array, your method will receive it as an argument
+            'context' => [
+                'stuff' => 'thing',
+            ],
+        ]),
+    ],
+]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $queueApi->addToQueue($batchModel);
+/** @noinspection PhpUnhandledExceptionInspection */
+$queueApi->addToQueue($batchModel);
 ```
 
 ## License
