@@ -8,6 +8,8 @@ use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\models\ActionQueueBatchModel;
 use corbomite\queue\services\AddBatchToQueueService;
 use corbomite\queue\services\GetNextQueueItemService;
+use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
+use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 
 class QueueApi
 {
@@ -28,15 +30,27 @@ class QueueApi
         return new ActionQueueItemModel($props);
     }
 
+    /**
+     * @throws InvalidActionQueueBatchModel
+     */
     public function addToQueue(ActionQueueBatchModel $model): void
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(AddBatchToQueueService::class);
         $service($model);
     }
 
     public function getNextQueueItem(bool $markAsStarted = false): ?ActionQueueItemModel
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(GetNextQueueItemService::class);
         return $service($markAsStarted);
+    }
+
+    public function markAsStoppedDueToError(ActionQueueItemModel $model): void
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service = $this->di->getFromDefinition(MarkAsStoppedDueToErrorService::class);
+        $service($model);
     }
 }

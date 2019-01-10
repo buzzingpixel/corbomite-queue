@@ -56,7 +56,7 @@ class AddBatchToQueueService
             $items->appendNew([
                 'guid' => $item->guid(),
                 'order_to_run' => $order,
-                'action_queue_guid' => $model->guid(),
+                'action_queue_batch_guid' => $model->guid(),
                 'is_finished' => false,
                 'finished_at' => null,
                 'finished_at_time_zone' => null,

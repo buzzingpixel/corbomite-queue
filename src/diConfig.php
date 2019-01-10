@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
 use corbomite\queue\services\AddBatchToQueueService;
 use corbomite\queue\services\GetNextQueueItemService;
+use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 
 return [
     CreateMigrationsAction::class => function () {
@@ -25,5 +26,8 @@ return [
     },
     GetNextQueueItemService::class => function () {
         return new GetNextQueueItemService(new OrmFactory());
+    },
+    MarkAsStoppedDueToErrorService::class => function () {
+        return new MarkAsStoppedDueToErrorService(new OrmFactory());
     },
 ];

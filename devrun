@@ -62,3 +62,11 @@ function testGetNextQueueItem() {
 }
 
 // testGetNextQueueItem();
+
+function testMarkAsStoppedDueToError() {
+    $queueApi = Di::get(QueueApi::class);
+
+    $queueApi->markAsStoppedDueToError($queueApi->getNextQueueItem());
+}
+
+// testMarkAsStoppedDueToError();
