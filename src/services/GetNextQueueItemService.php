@@ -27,7 +27,7 @@ class GetNextQueueItemService
     public function get(bool $markAsStarted = false): ?ActionQueueItemModel
     {
         try {
-            $actionQueueRecord = $this->fetchActionQueueRecord();
+            $actionQueueRecord = $this->fetchActionQueueBatchRecord();
 
             if (! $actionQueueRecord) {
                 return null;
@@ -64,8 +64,9 @@ class GetNextQueueItemService
         }
     }
 
-    private function fetchActionQueueRecord(): ?ActionQueueBatchRecord
+    private function fetchActionQueueBatchRecord(): ?ActionQueueBatchRecord
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         /** @var ActionQueueBatchRecord $actionQueueBatchRecord */
         $actionQueueBatchRecord = $this->ormFactory->makeOrm()
             ->select(ActionQueueBatch::class)

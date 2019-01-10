@@ -115,9 +115,11 @@ class AddBatchToQueueService
 
     private function setGuids(ActionQueueBatchModel $model): void
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $model->guid($this->uuidFactory->uuid4()->toString());
 
         foreach ($model->items() as $item) {
+            /** @noinspection PhpUnhandledExceptionInspection */
             $item->guid($this->uuidFactory->uuid4()->toString());
         }
     }

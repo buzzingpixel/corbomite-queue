@@ -5,10 +5,12 @@ use corbomite\di\Di;
 use Ramsey\Uuid\UuidFactory;
 use corbomite\queue\QueueApi;
 use corbomite\db\Factory as OrmFactory;
+use corbomite\queue\services\MarkItemAsRunService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
 use corbomite\queue\services\AddBatchToQueueService;
 use corbomite\queue\services\GetNextQueueItemService;
+use corbomite\queue\services\UpdateActionQueueService;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 
 return [
@@ -29,5 +31,14 @@ return [
     },
     MarkAsStoppedDueToErrorService::class => function () {
         return new MarkAsStoppedDueToErrorService(new OrmFactory());
+    },
+    MarkItemAsRunService::class => function () {
+        return new MarkItemAsRunService(
+            new OrmFactory(),
+            Di::get(UpdateActionQueueService::class)
+        );
+    },
+    UpdateActionQueueService::class => function () {
+        return new UpdateActionQueueService(new OrmFactory());
     },
 ];

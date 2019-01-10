@@ -6,8 +6,10 @@ namespace corbomite\queue;
 use corbomite\di\Di;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\models\ActionQueueBatchModel;
+use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\AddBatchToQueueService;
 use corbomite\queue\services\GetNextQueueItemService;
+use corbomite\queue\services\UpdateActionQueueService;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 
@@ -52,5 +54,19 @@ class QueueApi
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(MarkAsStoppedDueToErrorService::class);
         $service($model);
+    }
+
+    public function markItemAsRun(ActionQueueItemModel $model): void
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service = $this->di->getFromDefinition(MarkItemAsRunService::class);
+        $service($model);
+    }
+
+    public function updateActionQueue(string $actionQueueGuid): void
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service = $this->di->getFromDefinition(UpdateActionQueueService::class);
+        $service($actionQueueGuid);
     }
 }

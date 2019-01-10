@@ -7,9 +7,11 @@ class Noop
 {
     public function __invoke()
     {
+        // var_dump('invoke');
     }
 
     public function noop()
     {
+        // var_dump('noop');
     }
 }
