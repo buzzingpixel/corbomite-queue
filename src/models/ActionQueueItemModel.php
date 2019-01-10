@@ -7,6 +7,13 @@ use DateTime;
 
 class ActionQueueItemModel
 {
+    public function __construct(array $props = [])
+    {
+        foreach ($props as $key => $val) {
+            $this->{$key}($val);
+        }
+    }
+
     private $guid = '';
 
     public function guid(?string $guid = null): string
@@ -39,7 +46,7 @@ class ActionQueueItemModel
         return $this->class = $class !== null ? $class : $this->class;
     }
 
-    private $method = '';
+    private $method = '__invoke';
 
     public function method(?string $method = null): string
     {

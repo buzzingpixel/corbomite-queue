@@ -7,6 +7,13 @@ use DateTime;
 
 class ActionQueueBatchModel
 {
+    public function __construct(array $props = [])
+    {
+        foreach ($props as $key => $val) {
+            $this->{$key}($val);
+        }
+    }
+
     private $guid = '';
 
     public function guid(?string $guid = null): string

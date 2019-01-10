@@ -17,6 +17,7 @@ namespace corbomite\queue\data\ActionQueueItem;
  * @property mixed $class text(65535) NOT NULL
  * @property mixed $method text(65535) NOT NULL
  * @property mixed $context text(65535)
+ * @property null|false|\corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord $action_queue_batch
  */
 trait ActionQueueItemFields
 {

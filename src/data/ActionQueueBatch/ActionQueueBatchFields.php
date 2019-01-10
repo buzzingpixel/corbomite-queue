@@ -20,6 +20,7 @@ namespace corbomite\queue\data\ActionQueueBatch;
  * @property mixed $finished_at datetime
  * @property mixed $finished_at_time_zone varchar(255)
  * @property mixed $context text(65535)
+ * @property null|\corbomite\queue\data\ActionQueueItem\ActionQueueItemRecordSet $action_queue_items
  */
 trait ActionQueueBatchFields
 {
