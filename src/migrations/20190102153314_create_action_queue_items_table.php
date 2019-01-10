@@ -10,7 +10,7 @@ class CreateActionQueueItemsTable extends AbstractMigration
         $this->table('action_queue_items')
             ->addColumn('guid', 'string')
             ->addColumn('order_to_run', 'integer')
-            ->addColumn('action_queue_guid', 'string')
+            ->addColumn('action_queue_batch_guid', 'string')
             ->addColumn('is_finished', 'boolean', ['default' => '0'])
             ->addColumn('finished_at', 'datetime', ['null' => true])
             ->addColumn('finished_at_time_zone', 'string', ['null' => true])

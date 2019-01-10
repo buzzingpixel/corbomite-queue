@@ -11,7 +11,7 @@ class ActionQueueBatchRelationships extends MapperRelationships
     protected function define(): void
     {
         $this->oneToMany('action_queue_items', ActionQueueItem::class, [
-            'guid' => 'action_queue_guid',
+            'guid' => 'action_queue_batch_guid',
         ]);
     }
 }

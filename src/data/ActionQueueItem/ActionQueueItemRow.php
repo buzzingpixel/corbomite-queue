@@ -12,7 +12,7 @@ use Atlas\Table\Row;
  * @property mixed $id int(10,0) NOT NULL
  * @property mixed $guid varchar(255) NOT NULL
  * @property mixed $order_to_run int(10,0) NOT NULL
- * @property mixed $action_queue_guid varchar(255) NOT NULL
+ * @property mixed $action_queue_batch_guid varchar(255) NOT NULL
  * @property mixed $is_finished tinyint(3,0) NOT NULL
  * @property mixed $finished_at datetime
  * @property mixed $finished_at_time_zone varchar(255)
@@ -26,7 +26,7 @@ class ActionQueueItemRow extends Row
         'id' => null,
         'guid' => null,
         'order_to_run' => null,
-        'action_queue_guid' => null,
+        'action_queue_batch_guid' => null,
         'is_finished' => '0',
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',

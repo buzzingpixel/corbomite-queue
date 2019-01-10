@@ -55,8 +55,8 @@ class ActionQueueItemTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'action_queue_guid' => [
-            'name' => 'action_queue_guid',
+        'action_queue_batch_guid' => [
+            'name' => 'action_queue_batch_guid',
             'type' => 'varchar',
             'size' => 255,
             'scale' => null,
@@ -138,7 +138,7 @@ class ActionQueueItemTable extends Table
         'id',
         'guid',
         'order_to_run',
-        'action_queue_guid',
+        'action_queue_batch_guid',
         'is_finished',
         'finished_at',
         'finished_at_time_zone',
@@ -151,7 +151,7 @@ class ActionQueueItemTable extends Table
         'id' => null,
         'guid' => null,
         'order_to_run' => null,
-        'action_queue_guid' => null,
+        'action_queue_batch_guid' => null,
         'is_finished' => '0',
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',
