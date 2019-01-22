@@ -13,8 +13,8 @@ use DateTime;
 use Throwable;
 use DateTimeZone;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemRecord;
 
 class MarkItemAsRunService
@@ -30,12 +30,12 @@ class MarkItemAsRunService
         $this->updateActionQueue = $updateActionQueue;
     }
 
-    public function __invoke(ActionQueueItemModel $model): void
+    public function __invoke(ActionQueueItemModelInterface $model): void
     {
         $this->markAsRun($model);
     }
 
-    public function markAsRun(ActionQueueItemModel $model): void
+    public function markAsRun(ActionQueueItemModelInterface $model): void
     {
         try {
             $dateTime = new DateTime();

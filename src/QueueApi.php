@@ -12,14 +12,17 @@ namespace corbomite\queue;
 use corbomite\di\Di;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\models\ActionQueueBatchModel;
+use corbomite\queue\interfaces\QueueApiInterface;
 use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\AddBatchToQueueService;
 use corbomite\queue\services\GetNextQueueItemService;
 use corbomite\queue\services\UpdateActionQueueService;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 
-class QueueApi
+class QueueApi implements QueueApiInterface
 {
     private $di;
 
@@ -28,12 +31,12 @@ class QueueApi
         $this->di = $di;
     }
 
-    public function makeActionQueueBatchModel(array $props = []): ActionQueueBatchModel
+    public function makeActionQueueBatchModel(array $props = []): ActionQueueBatchModelInterface
     {
         return new ActionQueueBatchModel($props);
     }
 
-    public function makeActionQueueItemModel(array $props = []): ActionQueueItemModel
+    public function makeActionQueueItemModel(array $props = []): ActionQueueItemModelInterface
     {
         return new ActionQueueItemModel($props);
     }
@@ -41,38 +44,38 @@ class QueueApi
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    public function addToQueue(ActionQueueBatchModel $model): void
+    public function addToQueue(ActionQueueBatchModelInterface $model): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(AddBatchToQueueService::class);
-        $service($model);
+        $service->add($model);
     }
 
-    public function getNextQueueItem(bool $markAsStarted = false): ?ActionQueueItemModel
+    public function getNextQueueItem(bool $markAsStarted = false): ?ActionQueueItemModelInterface
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(GetNextQueueItemService::class);
-        return $service($markAsStarted);
+        return $service->get($markAsStarted);
     }
 
-    public function markAsStoppedDueToError(ActionQueueItemModel $model): void
+    public function markAsStoppedDueToError(ActionQueueItemModelInterface $model): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(MarkAsStoppedDueToErrorService::class);
-        $service($model);
+        $service->markStopped($model);
     }
 
-    public function markItemAsRun(ActionQueueItemModel $model): void
+    public function markItemAsRun(ActionQueueItemModelInterface $model): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(MarkItemAsRunService::class);
-        $service($model);
+        $service->markAsRun($model);
     }
 
     public function updateActionQueue(string $actionQueueGuid): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(UpdateActionQueueService::class);
-        $service($actionQueueGuid);
+        $service->update($actionQueueGuid);
     }
 }

@@ -13,6 +13,7 @@ use Throwable;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 
@@ -25,12 +26,12 @@ class GetNextQueueItemService
         $this->ormFactory = $ormFactory;
     }
 
-    public function __invoke(bool $markAsStarted = false): ?ActionQueueItemModel
+    public function __invoke(bool $markAsStarted = false): ?ActionQueueItemModelInterface
     {
         return $this->get($markAsStarted);
     }
 
-    public function get(bool $markAsStarted = false): ?ActionQueueItemModel
+    public function get(bool $markAsStarted = false): ?ActionQueueItemModelInterface
     {
         try {
             $actionQueueRecord = $this->fetchActionQueueBatchRecord();

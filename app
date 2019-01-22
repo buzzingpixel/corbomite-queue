@@ -24,6 +24,27 @@ putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 
 require APP_VENDOR_PATH . '/autoload.php';
 
+// $queueApi = Di::get(\corbomite\queue\QueueApi::class);
+
+// $batchModel = $queueApi->makeActionQueueBatchModel();
+// $itemModel1 = $queueApi->makeActionQueueItemModel();
+// $itemModel2 = $queueApi->makeActionQueueItemModel();
+
+// $itemModel1->class(\corbomite\queue\Noop::class);
+
+// $itemModel2->class(\corbomite\queue\Noop::class);
+// $itemModel2->method('noop');
+
+// $batchModel->name('test_name');
+// $batchModel->title('Test Name');
+// $batchModel->addItem($itemModel1);
+// $batchModel->addItem($itemModel2);
+
+// $queueApi->addToQueue($batchModel);
+
+// var_dump($queueApi->getNextQueueItem());
+// die;
+
 /** @noinspection PhpUnhandledExceptionInspection */
 Di::get(Kernel::class)($argv);
 exit();

@@ -10,8 +10,9 @@ declare(strict_types=1);
 namespace corbomite\queue\models;
 
 use DateTime;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 
-class ActionQueueItemModel
+class ActionQueueItemModel implements ActionQueueItemModelInterface
 {
     public function __construct(array $props = [])
     {
@@ -22,47 +23,44 @@ class ActionQueueItemModel
 
     private $guid = '';
 
-    public function guid(?string $guid = null): string
+    public function guid(?string $val = null): string
     {
-        return $this->guid = $guid !== null ? $guid : $this->guid;
+        return $this->guid = $val ?? $this->guid;
     }
 
     private $isFinished = false;
 
-    public function isFinished(?bool $isFinished = null): bool
+    public function isFinished(?bool $val = null): bool
     {
-        return $this->isFinished = $isFinished !== null ?
-            $isFinished :
-            $this->isFinished;
+        return $this->isFinished = $val ?? $this->isFinished;
     }
 
+    /** @var DateTime|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $finishedAt = null): ?DateTime
+    public function finishedAt(?DateTime $val = null): ?DateTime
     {
-        return $this->finishedAt = $finishedAt !== null ?
-            $finishedAt :
-            $this->finishedAt;
+        return $this->finishedAt = $val ?? $this->finishedAt;
     }
 
     private $class = '';
 
-    public function class(?string $class = null): string
+    public function class(?string $val = null): string
     {
-        return $this->class = $class !== null ? $class : $this->class;
+        return $this->class = $val ?? $this->class;
     }
 
     private $method = '__invoke';
 
-    public function method(?string $method = null): string
+    public function method(?string $val = null): string
     {
-        return $this->method = $method !== null ? $method : $this->method;
+        return $this->method = $val ?? $this->method;
     }
 
     private $context = [];
 
-    public function context(?array $context = null): array
+    public function context(?array $val = null): array
     {
-        return $this->context = $context !== null ? $context : $this->context;
+        return $this->context = $val ?? $this->context;
     }
 }

@@ -13,8 +13,8 @@ use DateTime;
 use Throwable;
 use DateTimeZone;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemRecord;
 
 class MarkAsStoppedDueToErrorService
@@ -26,12 +26,12 @@ class MarkAsStoppedDueToErrorService
         $this->ormFactory = $ormFactory;
     }
 
-    public function __invoke(ActionQueueItemModel $model): void
+    public function __invoke(ActionQueueItemModelInterface $model): void
     {
         $this->markStopped($model);
     }
 
-    public function markStopped(ActionQueueItemModel $model): void
+    public function markStopped(ActionQueueItemModelInterface $model): void
     {
         try {
             $dateTime = new DateTime();
