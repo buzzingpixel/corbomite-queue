@@ -49,7 +49,7 @@ class FetchBatchesService
         foreach ($this->fetchResults($params) as $record) {
             $model = new ActionQueueBatchModel();
 
-            $model->guid($record->guid);
+            $model->setGuidAsBytes($record->guid);
             $model->name($record->name);
             $model->title($record->title);
             $model->hasStarted((bool) $record->has_started);
@@ -74,7 +74,7 @@ class FetchBatchesService
 
                 $itemModel = new ActionQueueItemModel();
 
-                $itemModel->guid($item->guid);
+                $itemModel->setGuidAsBytes($item->guid);
                 $itemModel->isFinished((bool) $item->is_finished);
 
                 if ($item->finished_at) {
@@ -103,8 +103,7 @@ class FetchBatchesService
         /** @noinspection PhpUnhandledExceptionInspection */
         return $this->buildQuery->build(ActionQueueBatch::class, $params)
             ->with([
-                'action_queue_items' => function (ActionQueueItemSelect $select)
-                {
+                'action_queue_items' => function (ActionQueueItemSelect $select) {
                     $select->orderBy('order_to_run ASC');
                 }
             ])

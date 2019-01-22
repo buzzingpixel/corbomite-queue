@@ -10,22 +10,18 @@ declare(strict_types=1);
 namespace corbomite\queue\models;
 
 use DateTime;
+use corbomite\db\traits\UuidTrait;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 
 class ActionQueueItemModel implements ActionQueueItemModelInterface
 {
+    use UuidTrait;
+
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
             $this->{$key}($val);
         }
-    }
-
-    private $guid = '';
-
-    public function guid(?string $val = null): string
-    {
-        return $this->guid = $val ?? $this->guid;
     }
 
     private $isFinished = false;

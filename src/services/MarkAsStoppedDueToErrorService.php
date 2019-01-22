@@ -41,7 +41,7 @@ class MarkAsStoppedDueToErrorService
 
             /** @var ActionQueueItemRecord $record */
             $record = $orm->select(ActionQueueItem::class)
-                ->where('guid = ', $model->guid())
+                ->where('guid = ', $model->getGuidAsBytes())
                 ->with(['action_queue_batch'])
                 ->fetchRecord();
 

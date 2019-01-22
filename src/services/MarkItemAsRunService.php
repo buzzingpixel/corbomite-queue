@@ -45,7 +45,7 @@ class MarkItemAsRunService
 
             /** @var ActionQueueItemRecord $record */
             $record = $atlas->select(ActionQueueItem::class)
-                ->where('guid = ', $model->guid())
+                ->where('guid = ', $model->getGuidAsBytes())
                 ->with(['action_queue_batch'])
                 ->fetchRecord();
 

@@ -8,7 +8,6 @@ declare(strict_types=1);
  */
 
 use corbomite\di\Di;
-use Ramsey\Uuid\UuidFactory;
 use corbomite\queue\QueueApi;
 use corbomite\db\Factory as DbFactory;
 use corbomite\db\Factory as OrmFactory;
@@ -40,7 +39,7 @@ return [
         );
     },
     AddBatchToQueueService::class => function () {
-        return new AddBatchToQueueService(new OrmFactory(), new UuidFactory());
+        return new AddBatchToQueueService(new OrmFactory());
     },
     FetchBatchesService::class => function () {
         return new FetchBatchesService(
@@ -60,6 +59,9 @@ return [
         );
     },
     UpdateActionQueueService::class => function () {
-        return new UpdateActionQueueService(new OrmFactory());
+        return new UpdateActionQueueService(
+            Di::get(QueueApi::class),
+            new OrmFactory()
+        );
     },
 ];

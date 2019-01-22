@@ -11,7 +11,6 @@ namespace corbomite\queue\services;
 
 use DateTime;
 use DateTimeZone;
-use Ramsey\Uuid\UuidFactoryInterface;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
@@ -22,14 +21,10 @@ use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 class AddBatchToQueueService
 {
     private $ormFactory;
-    private $uuidFactory;
 
-    public function __construct(
-        OrmFactory $ormFactory,
-        UuidFactoryInterface $uuidFactory
-    ) {
+    public function __construct(OrmFactory $ormFactory)
+    {
         $this->ormFactory = $ormFactory;
-        $this->uuidFactory = $uuidFactory;
     }
 
     /**
@@ -52,17 +47,18 @@ class AddBatchToQueueService
         $dateTime->setTimezone(new DateTimeZone('UTC'));
 
         $this->validateModel($model);
-        $this->setGuids($model);
 
         $items = $orm->newRecordSet(ActionQueueItem::class);
 
         $order = 1;
 
+        $batchGuidBytes = $model->getGuidAsBytes();
+
         foreach ($model->items() as $item) {
             $items->appendNew([
-                'guid' => $item->guid(),
+                'guid' => $item->getGuidAsBytes(),
+                'action_queue_batch_guid' => $batchGuidBytes,
                 'order_to_run' => $order,
-                'action_queue_batch_guid' => $model->guid(),
                 'is_finished' => false,
                 'finished_at' => null,
                 'finished_at_time_zone' => null,
@@ -75,7 +71,7 @@ class AddBatchToQueueService
         }
 
         $record = $orm->newRecord(ActionQueueBatch::class);
-        $record->guid = $model->guid();
+        $record->guid = $batchGuidBytes;
         $record->name = $model->name();
         $record->title = $model->title();
         $record->has_started = false;
@@ -115,17 +111,6 @@ class AddBatchToQueueService
             if (! method_exists($item->class(), $item->method())) {
                 throw new InvalidActionQueueBatchModel();
             }
-        }
-    }
-
-    private function setGuids(ActionQueueBatchModelInterface $model): void
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $model->guid($this->uuidFactory->uuid4()->toString());
-
-        foreach ($model->items() as $item) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            $item->guid($this->uuidFactory->uuid4()->toString());
         }
     }
 }

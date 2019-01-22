@@ -57,13 +57,14 @@ class GetNextQueueItemService
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);
             }
 
-            $model = new ActionQueueItemModel([
-                'guid' => $item->guid,
-                'isFinished' => false,
-                'class' => $item->class,
-                'method' => $item->method,
-                'context' => json_decode($item->context, true) ?? [],
-            ]);
+            $model = new ActionQueueItemModel();
+            $model->setGuidAsBytes($item->guid);
+            $model->isFinished(false);
+            $model->class($item->class);
+            $model->method($item->method);
+            $context = json_decode($item->context, true) ?? [];
+            $context = is_array($context) ? $context : [];
+            $model->context($context);
 
             return $model;
         } catch (Throwable $e) {

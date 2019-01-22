@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace corbomite\queue;
 
 use corbomite\di\Di;
+use corbomite\db\models\UuidModel;
 use corbomite\db\Factory as DbFactory;
 use corbomite\db\interfaces\QueryModelInterface;
 use corbomite\queue\models\ActionQueueItemModel;
@@ -39,6 +40,11 @@ class QueueApi implements QueueApiInterface
     public function makeQueryModel(): QueryModelInterface
     {
         return $this->dbFactory->makeQueryModel();
+    }
+
+    public function uuidToBytes(string $string): string
+    {
+        return (new UuidModel($string))->toBytes();
     }
 
     public function makeActionQueueBatchModel(array $props = []): ActionQueueBatchModelInterface

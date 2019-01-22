@@ -22,6 +22,13 @@ interface QueueApiInterface
     public function makeQueryModel(): QueryModelInterface;
 
     /**
+     * Converts a UUID to bytes for database queries
+     * @param string $string
+     * @return string
+     */
+    public function uuidToBytes(string $string): string;
+
+    /**
      * Makes an action queue batch model
      * @param array $props
      * @return ActionQueueBatchModelInterface

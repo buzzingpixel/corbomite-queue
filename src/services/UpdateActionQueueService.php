@@ -12,6 +12,7 @@ namespace corbomite\queue\services;
 use DateTime;
 use Throwable;
 use DateTimeZone;
+use corbomite\queue\QueueApi;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
@@ -19,10 +20,14 @@ use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 
 class UpdateActionQueueService
 {
+    private $queueApi;
     private $ormFactory;
 
-    public function __construct(OrmFactory $ormFactory)
-    {
+    public function __construct(
+        QueueApi $queueApi,
+        OrmFactory $ormFactory
+    ) {
+        $this->queueApi = $queueApi;
         $this->ormFactory = $ormFactory;
     }
 
@@ -83,6 +88,10 @@ class UpdateActionQueueService
     private function fetchActionQueueBatchRecord(
         string $actionQueueGuid
     ): ?ActionQueueBatchRecord {
+        if (! $this->isBinary($actionQueueGuid)) {
+            $actionQueueGuid = $this->queueApi->uuidToBytes($actionQueueGuid);
+        }
+
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @var ActionQueueBatchRecord $actionQueueBatchRecord */
         $actionQueueBatchRecord = $this->ormFactory->makeOrm()
@@ -98,5 +107,10 @@ class UpdateActionQueueService
             ->fetchRecord();
 
         return $actionQueueBatchRecord;
+    }
+
+    private function isBinary($str): bool
+    {
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
     }
 }
