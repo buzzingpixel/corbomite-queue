@@ -24,8 +24,8 @@ class ActionQueueItemTable extends Table
     const COLUMNS = [
         'guid' => [
             'name' => 'guid',
-            'type' => 'varchar',
-            'size' => 255,
+            'type' => 'binary',
+            'size' => 16,
             'scale' => null,
             'notnull' => true,
             'default' => null,
@@ -33,22 +33,22 @@ class ActionQueueItemTable extends Table
             'primary' => true,
             'options' => null,
         ],
-        'order_to_run' => [
-            'name' => 'order_to_run',
-            'type' => 'int',
-            'size' => 10,
-            'scale' => 0,
+        'action_queue_batch_guid' => [
+            'name' => 'action_queue_batch_guid',
+            'type' => 'binary',
+            'size' => 16,
+            'scale' => null,
             'notnull' => true,
             'default' => null,
             'autoinc' => false,
             'primary' => false,
             'options' => null,
         ],
-        'action_queue_batch_guid' => [
-            'name' => 'action_queue_batch_guid',
-            'type' => 'varchar',
-            'size' => 255,
-            'scale' => null,
+        'order_to_run' => [
+            'name' => 'order_to_run',
+            'type' => 'int',
+            'size' => 10,
+            'scale' => 0,
             'notnull' => true,
             'default' => null,
             'autoinc' => false,
@@ -125,8 +125,8 @@ class ActionQueueItemTable extends Table
 
     const COLUMN_NAMES = [
         'guid',
-        'order_to_run',
         'action_queue_batch_guid',
+        'order_to_run',
         'is_finished',
         'finished_at',
         'finished_at_time_zone',
@@ -137,8 +137,8 @@ class ActionQueueItemTable extends Table
 
     const COLUMN_DEFAULTS = [
         'guid' => null,
-        'order_to_run' => null,
         'action_queue_batch_guid' => null,
+        'order_to_run' => null,
         'is_finished' => '0',
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',

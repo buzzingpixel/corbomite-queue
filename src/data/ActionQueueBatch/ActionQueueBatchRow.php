@@ -9,7 +9,7 @@ namespace corbomite\queue\data\ActionQueueBatch;
 use Atlas\Table\Row;
 
 /**
- * @property mixed $guid varchar(255) NOT NULL
+ * @property mixed $guid binary(16) NOT NULL
  * @property mixed $name varchar(255) NOT NULL
  * @property mixed $title varchar(255) NOT NULL
  * @property mixed $has_started tinyint(3,0) NOT NULL
