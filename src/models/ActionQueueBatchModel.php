@@ -57,9 +57,9 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         return $this->isFinished = $val ?? $this->isFinished;
     }
 
-    private $percentComplete = 0;
+    private $percentComplete = 0.0;
 
-    public function percentComplete(?bool $val = null): int
+    public function percentComplete(?float $val = null): float
     {
         return $this->percentComplete = $val ?? $this->percentComplete;
     }

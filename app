@@ -26,6 +26,9 @@ require APP_VENDOR_PATH . '/autoload.php';
 
 // $queueApi = Di::get(\corbomite\queue\QueueApi::class);
 
+// var_dump($queueApi->fetchOneBatch());
+// die;
+
 // $batchModel = $queueApi->makeActionQueueBatchModel();
 // $itemModel1 = $queueApi->makeActionQueueItemModel();
 // $itemModel2 = $queueApi->makeActionQueueItemModel();

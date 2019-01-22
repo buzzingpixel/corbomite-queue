@@ -59,7 +59,7 @@ interface ActionQueueBatchModelInterface
      * @param bool|null $val
      * @return int
      */
-    public function percentComplete(?bool $val = null): int;
+    public function percentComplete(?float $val = null): float;
 
     /**
      * Returns value. Sets value if incoming argument set.

@@ -9,10 +9,18 @@ declare(strict_types=1);
 
 namespace corbomite\queue\interfaces;
 
+use corbomite\db\interfaces\QueryModelInterface;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
 
 interface QueueApiInterface
 {
+    /**
+     * Creates a Fetch User Params Model
+     * @param array $props
+     * @return QueryModelInterface
+     */
+    public function makeQueryModel(): QueryModelInterface;
+
     /**
      * Makes an action queue batch model
      * @param array $props
@@ -58,4 +66,18 @@ interface QueueApiInterface
      * @param string $actionQueueGuid
      */
     public function updateActionQueue(string $actionQueueGuid);
+
+    /**
+     * Fetches one matching batch based on query model settings
+     * @param QueryModelInterface|null $queryModel
+     * @return ActionQueueBatchModelInterface|null
+     */
+    public function fetchOneBatch(?QueryModelInterface $queryModel = null): ?ActionQueueBatchModelInterface;
+
+    /**
+     * Fetches all matching batches based on query model settings
+     * @param QueryModelInterface $queryModel
+     * @return ActionQueueBatchModelInterface[]
+     */
+    public function fetchAllBatches(?QueryModelInterface $queryModel = null): array;
 }

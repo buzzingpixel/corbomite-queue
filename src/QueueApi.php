@@ -10,8 +10,11 @@ declare(strict_types=1);
 namespace corbomite\queue;
 
 use corbomite\di\Di;
+use corbomite\db\Factory as DbFactory;
+use corbomite\db\interfaces\QueryModelInterface;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\models\ActionQueueBatchModel;
+use corbomite\queue\services\FetchBatchesService;
 use corbomite\queue\interfaces\QueueApiInterface;
 use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\AddBatchToQueueService;
@@ -25,10 +28,17 @@ use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 class QueueApi implements QueueApiInterface
 {
     private $di;
+    private $dbFactory;
 
-    public function __construct(Di $di)
+    public function __construct(Di $di, DbFactory $dbFactory)
     {
         $this->di = $di;
+        $this->dbFactory = $dbFactory;
+    }
+
+    public function makeQueryModel(): QueryModelInterface
+    {
+        return $this->dbFactory->makeQueryModel();
     }
 
     public function makeActionQueueBatchModel(array $props = []): ActionQueueBatchModelInterface
@@ -77,5 +87,32 @@ class QueueApi implements QueueApiInterface
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->getFromDefinition(UpdateActionQueueService::class);
         $service->update($actionQueueGuid);
+    }
+
+    public function fetchOneBatch(?QueryModelInterface $queryModel = null): ?ActionQueueBatchModelInterface
+    {
+        if (! $queryModel) {
+            $queryModel = $this->makeQueryModel();
+            $queryModel->addWhere('is_finished', 0);
+            $queryModel->addOrder('added_at', 'asc');
+        }
+
+        $queryModel->limit(1);
+
+        return $this->fetchAllBatches($queryModel)[0] ?? null;
+    }
+
+    public function fetchAllBatches(?QueryModelInterface $queryModel = null): array
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service = $this->di->getFromDefinition(FetchBatchesService::class);
+
+        if (! $queryModel) {
+            $queryModel = $this->makeQueryModel();
+            $queryModel->addWhere('is_finished', '0');
+            $queryModel->addOrder('added_at', 'asc');
+        }
+
+        return $service->fetch($queryModel);
     }
 }
