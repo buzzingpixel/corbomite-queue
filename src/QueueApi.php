@@ -7,7 +7,6 @@ namespace corbomite\queue;
 use corbomite\db\Factory as DbFactory;
 use corbomite\db\interfaces\QueryModelInterface;
 use corbomite\db\models\UuidModel;
-use corbomite\di\Di;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
 use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
@@ -20,15 +19,16 @@ use corbomite\queue\services\GetNextQueueItemService;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\UpdateActionQueueService;
+use Psr\Container\ContainerInterface;
 
 class QueueApi implements QueueApiInterface
 {
-    /** @var Di */
+    /** @var ContainerInterface */
     private $di;
     /** @var DbFactory */
     private $dbFactory;
 
-    public function __construct(Di $di, DbFactory $dbFactory)
+    public function __construct(ContainerInterface $di, DbFactory $dbFactory)
     {
         $this->di        = $di;
         $this->dbFactory = $dbFactory;
@@ -66,14 +66,14 @@ class QueueApi implements QueueApiInterface
     public function addToQueue(ActionQueueBatchModelInterface $model) : void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(AddBatchToQueueService::class);
+        $service = $this->di->get(AddBatchToQueueService::class);
         $service->add($model);
     }
 
     public function getNextQueueItem(bool $markAsStarted = false) : ?ActionQueueItemModelInterface
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(GetNextQueueItemService::class);
+        $service = $this->di->get(GetNextQueueItemService::class);
 
         return $service->get($markAsStarted);
     }
@@ -81,21 +81,21 @@ class QueueApi implements QueueApiInterface
     public function markAsStoppedDueToError(ActionQueueItemModelInterface $model) : void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(MarkAsStoppedDueToErrorService::class);
+        $service = $this->di->get(MarkAsStoppedDueToErrorService::class);
         $service->markStopped($model);
     }
 
     public function markItemAsRun(ActionQueueItemModelInterface $model) : void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(MarkItemAsRunService::class);
+        $service = $this->di->get(MarkItemAsRunService::class);
         $service->markAsRun($model);
     }
 
     public function updateActionQueue(string $actionQueueGuid) : void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(UpdateActionQueueService::class);
+        $service = $this->di->get(UpdateActionQueueService::class);
         $service->update($actionQueueGuid);
     }
 
@@ -118,7 +118,7 @@ class QueueApi implements QueueApiInterface
     public function fetchAllBatches(?QueryModelInterface $queryModel = null) : array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $service = $this->di->getFromDefinition(FetchBatchesService::class);
+        $service = $this->di->get(FetchBatchesService::class);
 
         if (! $queryModel) {
             $queryModel = $this->makeQueryModel();

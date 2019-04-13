@@ -30,7 +30,7 @@ use corbomite\queue\QueueApi;
 
 function testAddToQueue() {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $queueApi = Di::get(QueueApi::class);
+    $queueApi = Di::diContainer()->get(QueueApi::class);
 
     $batchModel = $queueApi->makeActionQueueBatchModel([
         'name' => 'this_is_a_test',
@@ -62,7 +62,7 @@ function testAddToQueue() {
 
 function testGetNextQueueItem() {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $queueApi = Di::get(QueueApi::class);
+    $queueApi = Di::diContainer()->get(QueueApi::class);
 
     $item = $queueApi->getNextQueueItem();
 
@@ -72,7 +72,7 @@ function testGetNextQueueItem() {
 
 function testMarkAsStoppedDueToError() {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $queueApi = Di::get(QueueApi::class);
+    $queueApi = Di::diContainer()->get(QueueApi::class);
 
     $queueApi->markAsStoppedDueToError($queueApi->getNextQueueItem());
 }
@@ -80,7 +80,7 @@ function testMarkAsStoppedDueToError() {
 
 function testMarkItemAsRun() {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $queueApi = Di::get(QueueApi::class);
+    $queueApi = Di::diContainer()->get(QueueApi::class);
 
     $queueApi->markItemAsRun($queueApi->getNextQueueItem());
 }

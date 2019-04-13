@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace corbomite\queue\actions;
 
-use corbomite\di\Di;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\QueueApi;
+use Psr\Container\ContainerInterface;
 use Throwable;
 
 class RunQueueAction
 {
-    /** @var Di */
+    /** @var ContainerInterface */
     private $di;
     /** @var QueueApi */
     private $queueApi;
 
-    public function __construct(Di $di)
+    public function __construct(ContainerInterface $di)
     {
         $this->di = $di;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->queueApi = $di->getFromDefinition(QueueApi::class);
+        $this->queueApi = $di->get(QueueApi::class);
     }
 
     public function __invoke() : ?int
@@ -46,9 +46,9 @@ class RunQueueAction
         $constructedClass = null;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        if ($this->di->hasDefinition($item->class())) {
+        if ($this->di->has($item->class())) {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $constructedClass = $this->di->makeFromDefinition($item->class());
+            $constructedClass = $this->di->get($item->class());
         }
 
         if (! $constructedClass) {

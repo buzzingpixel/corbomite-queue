@@ -30,7 +30,8 @@ require APP_VENDOR_PATH . '/autoload.php';
 // var_dump($uuid->toString(), $uuid2->toString());
 // die;
 
-$queueApi = Di::get(\corbomite\queue\QueueApi::class);
+/** @noinspection PhpUnhandledExceptionInspection */
+$queueApi = Di::diContainer()->get(\corbomite\queue\QueueApi::class);
 
 // $batchModel = $queueApi->makeActionQueueBatchModel();
 // $itemModel1 = $queueApi->makeActionQueueItemModel();
@@ -57,5 +58,5 @@ $queueApi = Di::get(\corbomite\queue\QueueApi::class);
 // die;
 
 /** @noinspection PhpUnhandledExceptionInspection */
-Di::get(Kernel::class)($argv);
+Di::diContainer()->get(Kernel::class)($argv);
 exit();

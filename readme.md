@@ -44,7 +44,7 @@ use corbomite\di\Di;
 use corbomite\queue\QueueApi;
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$queueApi = Di::get(QueueApi::class);
+$queueApi = Di::diContainer()->get(QueueApi::class);
 
 $batchModel = $queueApi->makeActionQueueBatchModel([
     'name' => 'this_is_a_test',

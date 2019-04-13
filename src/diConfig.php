@@ -5,7 +5,6 @@ declare(strict_types=1);
 use corbomite\db\Factory as DbFactory;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\db\services\BuildQueryService;
-use corbomite\di\Di;
 use corbomite\queue\actions\CreateMigrationsAction;
 use corbomite\queue\actions\RunQueueAction;
 use corbomite\queue\QueueApi;
@@ -15,6 +14,7 @@ use corbomite\queue\services\GetNextQueueItemService;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\UpdateActionQueueService;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 return [
@@ -24,21 +24,21 @@ return [
             new ConsoleOutput()
         );
     },
-    RunQueueAction::class => static function () {
-        return new RunQueueAction(new Di());
+    RunQueueAction::class => static function (ContainerInterface $di) {
+        return new RunQueueAction($di);
     },
-    QueueApi::class => static function () {
+    QueueApi::class => static function (ContainerInterface $di) {
         return new QueueApi(
-            new Di(),
+            $di,
             new DbFactory()
         );
     },
     AddBatchToQueueService::class => static function () {
         return new AddBatchToQueueService(new OrmFactory());
     },
-    FetchBatchesService::class => static function () {
+    FetchBatchesService::class => static function (ContainerInterface $di) {
         return new FetchBatchesService(
-            Di::get(BuildQueryService::class)
+            $di->get(BuildQueryService::class)
         );
     },
     GetNextQueueItemService::class => static function () {
@@ -47,15 +47,15 @@ return [
     MarkAsStoppedDueToErrorService::class => static function () {
         return new MarkAsStoppedDueToErrorService(new OrmFactory());
     },
-    MarkItemAsRunService::class => static function () {
+    MarkItemAsRunService::class => static function (ContainerInterface $di) {
         return new MarkItemAsRunService(
             new OrmFactory(),
-            Di::get(UpdateActionQueueService::class)
+            $di->get(UpdateActionQueueService::class)
         );
     },
-    UpdateActionQueueService::class => static function () {
+    UpdateActionQueueService::class => static function (ContainerInterface $di) {
         return new UpdateActionQueueService(
-            Di::get(QueueApi::class),
+            $di->get(QueueApi::class),
             new OrmFactory()
         );
     },
