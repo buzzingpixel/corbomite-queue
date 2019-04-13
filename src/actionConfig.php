@@ -1,14 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
-
-use corbomite\queue\actions\RunQueueAction;
 use corbomite\queue\actions\CreateMigrationsAction;
+use corbomite\queue\actions\RunQueueAction;
 
 return [
     'queue' => [

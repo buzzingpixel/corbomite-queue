@@ -1,22 +1,19 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\actions;
 
-use Throwable;
 use corbomite\di\Di;
-use corbomite\queue\QueueApi;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\QueueApi;
+use Throwable;
 
 class RunQueueAction
 {
+    /** @var Di */
     private $di;
+    /** @var QueueApi */
     private $queueApi;
 
     public function __construct(Di $di)
@@ -27,7 +24,7 @@ class RunQueueAction
         $this->queueApi = $di->getFromDefinition(QueueApi::class);
     }
 
-    public function __invoke()
+    public function __invoke() : ?int
     {
         $item = $this->queueApi->getNextQueueItem(true);
 
@@ -39,11 +36,12 @@ class RunQueueAction
             return $this->run($item);
         } catch (Throwable $e) {
             $this->queueApi->markAsStoppedDueToError($item);
+
             return 1;
         }
     }
 
-    private function run(ActionQueueItemModelInterface $item): ?int
+    private function run(ActionQueueItemModelInterface $item) : ?int
     {
         $constructedClass = null;
 
@@ -54,7 +52,7 @@ class RunQueueAction
         }
 
         if (! $constructedClass) {
-            $class = $item->class();
+            $class            = $item->class();
             $constructedClass = new $class();
         }
 

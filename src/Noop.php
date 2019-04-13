@@ -1,22 +1,17 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue;
 
 class Noop
 {
-    public function __invoke()
+    public function __invoke() : void
     {
         // var_dump('invoke');
     }
 
-    public function noop()
+    public function noop() : void
     {
         // var_dump('noop');
     }
