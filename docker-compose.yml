@@ -1,21 +1,32 @@
 version: '3'
 
 services:
+  utility:
+    image: buzzingpixel/utility:1.1.0
+    container_name: utility-corbomite-queue
+    environment:
+      HOSTNAME: utility-corbomite-queue
+    volumes:
+      - .:/app
+      - db-volume:/db-volume
+    command: bash -c "chmod +x /app/scripts/devUtilityScript.sh && /app/scripts/devUtilityScript.sh"
+    networks:
+      corbomite-queue-network:
   php:
-    image: buzzingpixel/php7.2:latest
+    image: buzzingpixel/php7.2:1.0.6
     container_name: php-corbomite-queue
     environment:
       HOSTNAME: php-corbomite-queue
-    user: "1000:50"
+      COMPOSER_HOME: /composer-home-volume
     volumes:
       - .:/app:delegated
-      - ./dev/null:/app/.git:delegated
-      - ./dev/null:/app/.idea:delegated
-      - ./dev/null:/app/node_modules:delegated
       - ./serverConfig/php/php-custom-config.ini:/usr/local/etc/php/conf.d/php-custom-config.ini:delegated
       - ./serverConfig/php/php-config-dev.ini:/usr/local/etc/php/conf.d/php-env-config.ini:delegated
+      - composer-home-volume:/composer-home-volume:delegated
+    networks:
+      corbomite-queue-network:
   db:
-    image: buzzingpixel/mariadb:latest
+    image: buzzingpixel/mariadb:2.0.1
     container_name: db-corbomite-queue
     restart: always
     environment:
@@ -27,9 +38,15 @@ services:
     user: "1000:50"
     volumes:
       - .:/app:delegated
-      - ./dev/null:/app/.git:delegated
-      - ./dev/null:/app/.idea:delegated
-      - ./dev/null:/app/node_modules:delegated
-      - ./db:/var/lib/mysql:delegated
+      - db-volume:/var/lib/mysql
     ports:
       - "17296:3306"
+    networks:
+      corbomite-queue-network:
+
+volumes:
+  composer-home-volume:
+  db-volume:
+
+networks:
+  corbomite-queue-network:
