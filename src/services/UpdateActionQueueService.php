@@ -8,7 +8,7 @@ use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
-use corbomite\queue\QueueApi;
+use corbomite\queue\interfaces\QueueApiInterface;
 use DateTime;
 use DateTimeZone;
 use Throwable;
@@ -16,13 +16,13 @@ use function preg_match;
 
 class UpdateActionQueueService
 {
-    /** @var QueueApi */
+    /** @var QueueApiInterface */
     private $queueApi;
     /** @var OrmFactory */
     private $ormFactory;
 
     public function __construct(
-        QueueApi $queueApi,
+        QueueApiInterface $queueApi,
         OrmFactory $ormFactory
     ) {
         $this->queueApi   = $queueApi;

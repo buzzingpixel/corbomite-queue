@@ -8,6 +8,7 @@ use corbomite\db\Factory as OrmFactory;
 use corbomite\db\services\BuildQueryService;
 use corbomite\queue\actions\CreateMigrationsAction;
 use corbomite\queue\actions\RunQueueAction;
+use corbomite\queue\interfaces\QueueApiInterface;
 use corbomite\queue\PhpCalls;
 use corbomite\queue\QueueApi;
 use corbomite\queue\services\AddBatchToQueueService;
@@ -52,6 +53,9 @@ return [
             new DbFactory()
         );
     },
+    QueueApiInterface::class => static function (ContainerInterface $di) {
+        return $di->get(QueueApi::class);
+    },
     AddBatchToQueueService::class => static function () {
         return new AddBatchToQueueService(new OrmFactory());
     },
@@ -74,7 +78,7 @@ return [
     },
     UpdateActionQueueService::class => static function (ContainerInterface $di) {
         return new UpdateActionQueueService(
-            $di->get(QueueApi::class),
+            $di->get(QueueApiInterface::class),
             new OrmFactory()
         );
     },

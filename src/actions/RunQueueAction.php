@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace corbomite\queue\actions;
 
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
-use corbomite\queue\QueueApi;
+use corbomite\queue\interfaces\QueueApiInterface;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
@@ -13,7 +13,7 @@ class RunQueueAction
 {
     /** @var ContainerInterface */
     private $di;
-    /** @var QueueApi */
+    /** @var QueueApiInterface */
     private $queueApi;
 
     public function __construct(ContainerInterface $di)
@@ -21,7 +21,7 @@ class RunQueueAction
         $this->di = $di;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->queueApi = $di->get(QueueApi::class);
+        $this->queueApi = $di->get(QueueApiInterface::class);
     }
 
     public function __invoke() : ?int
