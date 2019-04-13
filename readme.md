@@ -1,5 +1,7 @@
 # Corbomite Queue
 
+<p><a href="https://travis-ci.org/buzzingpixel/corbomite-queue"><img src="https://travis-ci.org/buzzingpixel/corbomite-queue.svg?branch=master"></a></p>
+
 Part of BuzzingPixel's Corbomite project.
 
 This project provides a Queue for adding items to be run by the server in sequence.
@@ -34,7 +36,7 @@ That command runs the next item in your queue. In production environments, that 
 
 ### Adding to the queue
 
-The Queue API is provided to make things extremely easy to add items to the queue. Note that in the examples below, any class you specify to add the queue, Corbomite Queue will attempt to get it from the Corbomite Dependency Injector first so you can use dependency injection if you want to.
+The Queue API is provided to make things extremely easy to add items to the queue. Note that in the examples below, any class you specify to add the queue, Corbomite Queue will attempt to get it from the Dependency Injector first so you can use dependency injection if you want to.
 
 ```php
 <?php
