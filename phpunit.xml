@@ -23,6 +23,7 @@
                 <directory>src/migrations</directory>
                 <file>src/diConfig.php</file>
                 <file>src/Noop.php</file>
+                <file>src/PhpCalls.php</file>
             </exclude>
         </whitelist>
     </filter>
