@@ -12,7 +12,7 @@ namespace corbomite\queue\actions;
 use Throwable;
 use corbomite\di\Di;
 use corbomite\queue\QueueApi;
-use corbomite\queue\models\ActionQueueItemModel;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 
 class RunQueueAction
 {
@@ -43,7 +43,7 @@ class RunQueueAction
         }
     }
 
-    private function run(ActionQueueItemModel $item): ?int
+    private function run(ActionQueueItemModelInterface $item): ?int
     {
         $constructedClass = null;
 

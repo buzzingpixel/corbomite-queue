@@ -8,10 +8,12 @@ declare(strict_types=1);
  */
 
 use corbomite\di\Di;
-use Ramsey\Uuid\UuidFactory;
 use corbomite\queue\QueueApi;
+use corbomite\db\Factory as DbFactory;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\actions\RunQueueAction;
+use corbomite\db\services\BuildQueryService;
+use corbomite\queue\services\FetchBatchesService;
 use corbomite\queue\services\MarkItemAsRunService;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
@@ -31,10 +33,18 @@ return [
         return new RunQueueAction(new Di());
     },
     QueueApi::class => function () {
-        return new QueueApi(new Di());
+        return new QueueApi(
+            new Di(),
+            new DbFactory()
+        );
     },
     AddBatchToQueueService::class => function () {
-        return new AddBatchToQueueService(new OrmFactory(), new UuidFactory());
+        return new AddBatchToQueueService(new OrmFactory());
+    },
+    FetchBatchesService::class => function () {
+        return new FetchBatchesService(
+            Di::get(BuildQueryService::class)
+        );
     },
     GetNextQueueItemService::class => function () {
         return new GetNextQueueItemService(new OrmFactory());
@@ -49,6 +59,9 @@ return [
         );
     },
     UpdateActionQueueService::class => function () {
-        return new UpdateActionQueueService(new OrmFactory());
+        return new UpdateActionQueueService(
+            Di::get(QueueApi::class),
+            new OrmFactory()
+        );
     },
 ];

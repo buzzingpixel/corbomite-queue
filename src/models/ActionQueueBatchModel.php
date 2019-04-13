@@ -10,9 +10,14 @@ declare(strict_types=1);
 namespace corbomite\queue\models;
 
 use DateTime;
+use corbomite\db\traits\UuidTrait;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 
-class ActionQueueBatchModel
+class ActionQueueBatchModel implements ActionQueueBatchModelInterface
 {
+    use UuidTrait;
+
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
@@ -20,96 +25,88 @@ class ActionQueueBatchModel
         }
     }
 
-    private $guid = '';
-
-    public function guid(?string $guid = null): string
-    {
-        return $this->guid = $guid !== null ? $guid : $this->guid;
-    }
-
     private $name = '';
 
-    public function name(?string $name = null): string
+    public function name(?string $val = null): string
     {
-        return $this->name = $name !== null ? $name : $this->name;
+        return $this->name = $val ?? $this->name;
     }
 
     private $title = '';
 
-    public function title(?string $title = null): string
+    public function title(?string $val = null): string
     {
-        return $this->title = $title !== null ? $title : $this->title;
+        return $this->title = $val ?? $this->title;
     }
 
     private $hasStarted = false;
 
-    public function hasStarted(?bool $hasStarted = null): bool
+    public function hasStarted(?bool $val = null): bool
     {
-        return $this->hasStarted = $hasStarted !== null ?
-            $hasStarted :
-            $this->hasStarted;
+        return $this->hasStarted = $val ?? $this->hasStarted;
     }
 
     private $isFinished = false;
 
-    public function isFinished(?bool $isFinished = null): bool
+    public function isFinished(?bool $val = null): bool
     {
-        return $this->isFinished = $isFinished !== null ?
-            $isFinished :
-            $this->isFinished;
+        return $this->isFinished = $val ?? $this->isFinished;
     }
 
-    private $percentComplete = 0;
+    private $percentComplete = 0.0;
 
-    public function percentComplete(?bool $percentComplete = null): int
+    public function percentComplete(?float $val = null): float
     {
-        return $this->percentComplete = $percentComplete !== null ?
-            $percentComplete :
-            $this->percentComplete;
+        return $this->percentComplete = $val ?? $this->percentComplete;
     }
 
+    /** @var DateTime|null */
     private $addedAt;
 
     public function addedAt(?DateTime $addedAt = null): ?DateTime
     {
-        return $this->addedAt = $addedAt !== null ? $addedAt : $this->addedAt;
+        return $this->addedAt = $addedAt ?? $this->addedAt;
     }
 
+    /** @var DateTime|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $finishedAt = null): ?DateTime
+    public function finishedAt(?DateTime $val = null): ?DateTime
     {
-        return $this->finishedAt = $finishedAt !== null ?
-            $finishedAt :
-            $this->finishedAt;
+        return $this->finishedAt = $val ?? $this->finishedAt;
     }
 
     private $context = [];
 
-    public function context(?array $context = null): array
+    public function context(?array $val = null): array
     {
-        return $this->context = $context !== null ? $context : $this->context;
+        return $this->context = $val ?? $this->context;
     }
 
     private $items = [];
 
     /**
-     * @return ActionQueueItemModel[]
+     * @return ActionQueueItemModelInterface[]
      */
-    public function items(?array $items = null): array
+    public function items(?array $val = null): array
     {
-        if (\is_array($items)) {
-            foreach ($items as $item) {
-                if ($item instanceof ActionQueueItemModel) {
+        if (\is_array($val)) {
+            foreach ($val as $item) {
+                if ($item instanceof ActionQueueItemModelInterface) {
                     continue;
                 }
 
                 throw new \InvalidArgumentException(
-                    '$items must be an array of ActionQueueItemModel'
+                    '$items must be an array of ActionQueueItemModelInterface'
                 );
             }
         }
 
-        return $this->items = $items !== null ? $items : $this->items;
+        return $this->items = $val ?? $this->items;
+    }
+
+    public function addItem(ActionQueueItemModelInterface $val)
+    {
+        $this->items[] = $val;
     }
 }

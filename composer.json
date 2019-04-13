@@ -1,6 +1,6 @@
 {
     "name": "buzzingpixel/corbomite-queue",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "Corbomite queue",
     "authors": [
         {
@@ -12,7 +12,7 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
-        "buzzingpixel/corbomite-db": "^1.0.2",
+        "buzzingpixel/corbomite-db": "^1.2.1",
         "buzzingpixel/corbomite-di": "^1.0",
         "buzzingpixel/corbomite-migrations": "^1.0",
         "ramsey/uuid": "^3.8"

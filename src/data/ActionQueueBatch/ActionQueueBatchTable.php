@@ -22,26 +22,15 @@ class ActionQueueBatchTable extends Table
     const NAME = 'action_queue_batch';
 
     const COLUMNS = [
-        'id' => [
-            'name' => 'id',
-            'type' => 'int',
-            'size' => 10,
-            'scale' => 0,
-            'notnull' => true,
-            'default' => null,
-            'autoinc' => true,
-            'primary' => true,
-            'options' => null,
-        ],
         'guid' => [
             'name' => 'guid',
-            'type' => 'varchar',
-            'size' => 255,
+            'type' => 'binary',
+            'size' => 16,
             'scale' => null,
             'notnull' => true,
             'default' => null,
             'autoinc' => false,
-            'primary' => false,
+            'primary' => true,
             'options' => null,
         ],
         'name' => [
@@ -168,7 +157,6 @@ class ActionQueueBatchTable extends Table
     ];
 
     const COLUMN_NAMES = [
-        'id',
         'guid',
         'name',
         'title',
@@ -184,7 +172,6 @@ class ActionQueueBatchTable extends Table
     ];
 
     const COLUMN_DEFAULTS = [
-        'id' => null,
         'guid' => null,
         'name' => null,
         'title' => null,
@@ -200,10 +187,10 @@ class ActionQueueBatchTable extends Table
     ];
 
     const PRIMARY_KEY = [
-        'id',
+        'guid',
     ];
 
-    const AUTOINC_COLUMN = 'id';
+    const AUTOINC_COLUMN = null;
 
     const AUTOINC_SEQUENCE = null;
 }

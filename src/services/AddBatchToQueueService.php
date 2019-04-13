@@ -11,31 +11,26 @@ namespace corbomite\queue\services;
 
 use DateTime;
 use DateTimeZone;
-use Ramsey\Uuid\UuidFactoryInterface;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\models\ActionQueueItemModel;
-use corbomite\queue\models\ActionQueueBatchModel;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 
 class AddBatchToQueueService
 {
     private $ormFactory;
-    private $uuidFactory;
 
-    public function __construct(
-        OrmFactory $ormFactory,
-        UuidFactoryInterface $uuidFactory
-    ) {
+    public function __construct(OrmFactory $ormFactory)
+    {
         $this->ormFactory = $ormFactory;
-        $this->uuidFactory = $uuidFactory;
     }
 
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    public function __invoke(ActionQueueBatchModel $model): void
+    public function __invoke(ActionQueueBatchModelInterface $model): void
     {
         $this->add($model);
     }
@@ -43,7 +38,7 @@ class AddBatchToQueueService
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    public function add(ActionQueueBatchModel $model): void
+    public function add(ActionQueueBatchModelInterface $model): void
     {
         $orm = $this->ormFactory->makeOrm();
 
@@ -52,17 +47,18 @@ class AddBatchToQueueService
         $dateTime->setTimezone(new DateTimeZone('UTC'));
 
         $this->validateModel($model);
-        $this->setGuids($model);
 
         $items = $orm->newRecordSet(ActionQueueItem::class);
 
         $order = 1;
 
+        $batchGuidBytes = $model->getGuidAsBytes();
+
         foreach ($model->items() as $item) {
             $items->appendNew([
-                'guid' => $item->guid(),
+                'guid' => $item->getGuidAsBytes(),
+                'action_queue_batch_guid' => $batchGuidBytes,
                 'order_to_run' => $order,
-                'action_queue_batch_guid' => $model->guid(),
                 'is_finished' => false,
                 'finished_at' => null,
                 'finished_at_time_zone' => null,
@@ -75,7 +71,7 @@ class AddBatchToQueueService
         }
 
         $record = $orm->newRecord(ActionQueueBatch::class);
-        $record->guid = $model->guid();
+        $record->guid = $batchGuidBytes;
         $record->name = $model->name();
         $record->title = $model->title();
         $record->has_started = false;
@@ -95,7 +91,7 @@ class AddBatchToQueueService
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    private function validateModel(ActionQueueBatchModel $model): void
+    private function validateModel(ActionQueueBatchModelInterface $model): void
     {
         if (! $model->name() ||
             ! $model->title() ||
@@ -106,27 +102,15 @@ class AddBatchToQueueService
         }
 
         foreach ($model->items() as $item) {
-            if (! \is_object($item) ||
-                \get_class($item) !== ActionQueueItemModel::class ||
-                ! $item->class()
-            ) {
+            $instance = $item instanceof ActionQueueItemModelInterface;
+
+            if (! \is_object($item) || ! $instance || ! $item->class()) {
                 throw new InvalidActionQueueBatchModel();
             }
 
             if (! method_exists($item->class(), $item->method())) {
                 throw new InvalidActionQueueBatchModel();
             }
-        }
-    }
-
-    private function setGuids(ActionQueueBatchModel $model): void
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $model->guid($this->uuidFactory->uuid4()->toString());
-
-        foreach ($model->items() as $item) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            $item->guid($this->uuidFactory->uuid4()->toString());
         }
     }
 }

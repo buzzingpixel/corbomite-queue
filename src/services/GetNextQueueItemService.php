@@ -13,6 +13,7 @@ use Throwable;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 
@@ -25,12 +26,12 @@ class GetNextQueueItemService
         $this->ormFactory = $ormFactory;
     }
 
-    public function __invoke(bool $markAsStarted = false): ?ActionQueueItemModel
+    public function __invoke(bool $markAsStarted = false): ?ActionQueueItemModelInterface
     {
         return $this->get($markAsStarted);
     }
 
-    public function get(bool $markAsStarted = false): ?ActionQueueItemModel
+    public function get(bool $markAsStarted = false): ?ActionQueueItemModelInterface
     {
         try {
             $actionQueueRecord = $this->fetchActionQueueBatchRecord();
@@ -56,13 +57,14 @@ class GetNextQueueItemService
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);
             }
 
-            $model = new ActionQueueItemModel([
-                'guid' => $item->guid,
-                'isFinished' => false,
-                'class' => $item->class,
-                'method' => $item->method,
-                'context' => json_decode($item->context, true) ?? [],
-            ]);
+            $model = new ActionQueueItemModel();
+            $model->setGuidAsBytes($item->guid);
+            $model->isFinished(false);
+            $model->class($item->class);
+            $model->method($item->method);
+            $context = json_decode($item->context, true) ?? [];
+            $context = is_array($context) ? $context : [];
+            $model->context($context);
 
             return $model;
         } catch (Throwable $e) {

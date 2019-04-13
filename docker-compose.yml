@@ -38,15 +38,5 @@ services:
     user: "1000:50"
     volumes:
       - .:/app:delegated
-      - db-volume:/var/lib/mysql
     ports:
       - "17296:3306"
-    networks:
-      corbomite-queue-network:
-
-volumes:
-  composer-home-volume:
-  db-volume:
-
-networks:
-  corbomite-queue-network:

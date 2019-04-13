@@ -22,21 +22,21 @@ class ActionQueueItemTable extends Table
     const NAME = 'action_queue_items';
 
     const COLUMNS = [
-        'id' => [
-            'name' => 'id',
-            'type' => 'int',
-            'size' => 10,
-            'scale' => 0,
+        'guid' => [
+            'name' => 'guid',
+            'type' => 'binary',
+            'size' => 16,
+            'scale' => null,
             'notnull' => true,
             'default' => null,
-            'autoinc' => true,
+            'autoinc' => false,
             'primary' => true,
             'options' => null,
         ],
-        'guid' => [
-            'name' => 'guid',
-            'type' => 'varchar',
-            'size' => 255,
+        'action_queue_batch_guid' => [
+            'name' => 'action_queue_batch_guid',
+            'type' => 'binary',
+            'size' => 16,
             'scale' => null,
             'notnull' => true,
             'default' => null,
@@ -49,17 +49,6 @@ class ActionQueueItemTable extends Table
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
-            'notnull' => true,
-            'default' => null,
-            'autoinc' => false,
-            'primary' => false,
-            'options' => null,
-        ],
-        'action_queue_batch_guid' => [
-            'name' => 'action_queue_batch_guid',
-            'type' => 'varchar',
-            'size' => 255,
-            'scale' => null,
             'notnull' => true,
             'default' => null,
             'autoinc' => false,
@@ -135,10 +124,9 @@ class ActionQueueItemTable extends Table
     ];
 
     const COLUMN_NAMES = [
-        'id',
         'guid',
-        'order_to_run',
         'action_queue_batch_guid',
+        'order_to_run',
         'is_finished',
         'finished_at',
         'finished_at_time_zone',
@@ -148,10 +136,9 @@ class ActionQueueItemTable extends Table
     ];
 
     const COLUMN_DEFAULTS = [
-        'id' => null,
         'guid' => null,
-        'order_to_run' => null,
         'action_queue_batch_guid' => null,
+        'order_to_run' => null,
         'is_finished' => '0',
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',
@@ -161,10 +148,10 @@ class ActionQueueItemTable extends Table
     ];
 
     const PRIMARY_KEY = [
-        'id',
+        'guid',
     ];
 
-    const AUTOINC_COLUMN = 'id';
+    const AUTOINC_COLUMN = null;
 
     const AUTOINC_SEQUENCE = null;
 }
