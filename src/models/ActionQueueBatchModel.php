@@ -8,6 +8,8 @@ use corbomite\db\traits\UuidTrait;
 use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use InvalidArgumentException;
 use function is_array;
 
@@ -65,20 +67,36 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         return $this->percentComplete = $val ?? $this->percentComplete;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $addedAt;
 
-    public function addedAt(?DateTime $addedAt = null) : ?DateTime
+    public function addedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->addedAt = $addedAt ?? $this->addedAt;
+        if (! $val) {
+            return $this->addedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->addedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp());
+
+        return $this->addedAt;
     }
 
     /** @var DateTime|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $val = null) : ?DateTime
+    public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->finishedAt = $val ?? $this->finishedAt;
+        if (! $val) {
+            return $this->finishedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->finishedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp());
+
+        return $this->finishedAt;
     }
 
     /** @var mixed[] */
