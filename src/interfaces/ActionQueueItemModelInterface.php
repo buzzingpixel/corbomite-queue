@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace corbomite\queue\interfaces;
 
 use corbomite\db\interfaces\UuidModelInterface;
-use DateTime;
+use DateTimeInterface;
 
 interface ActionQueueItemModelInterface
 {
@@ -46,7 +46,7 @@ interface ActionQueueItemModelInterface
     /**
      * Returns value. Sets value if incoming argument set.
      */
-    public function finishedAt(?DateTime $val = null) : ?DateTime;
+    public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface;
 
     /**
      * Returns value. Sets value if incoming argument set.

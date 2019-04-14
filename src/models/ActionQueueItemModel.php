@@ -7,6 +7,8 @@ namespace corbomite\queue\models;
 use corbomite\db\traits\UuidTrait;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 class ActionQueueItemModel implements ActionQueueItemModelInterface
 {
@@ -33,9 +35,17 @@ class ActionQueueItemModel implements ActionQueueItemModelInterface
     /** @var DateTime|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $val = null) : ?DateTime
+    public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->finishedAt = $val ?? $this->finishedAt;
+        if (! $val) {
+            return $this->finishedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->finishedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp());
+
+        return $this->finishedAt;
     }
 
     /** @var string */
