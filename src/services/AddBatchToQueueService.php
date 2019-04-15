@@ -12,7 +12,6 @@ use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use DateTime;
 use DateTimeZone;
-use function is_array;
 use function is_object;
 use function json_encode;
 use function method_exists;
@@ -95,8 +94,7 @@ class AddBatchToQueueService
     {
         if (! $model->name() ||
             ! $model->title() ||
-            ! $model->items() ||
-            ! is_array($model->items())
+            ! $model->items()
         ) {
             throw new InvalidActionQueueBatchModel();
         }
