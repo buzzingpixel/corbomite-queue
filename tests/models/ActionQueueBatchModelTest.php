@@ -120,7 +120,7 @@ class ActionQueueBatchModelTest extends TestCase
         );
 
         self::assertEquals(
-            (new DateTime())->getTimezone()->getName(),
+            'America/Adak',
             $model->addedAt()->getTimezone()->getName()
         );
 

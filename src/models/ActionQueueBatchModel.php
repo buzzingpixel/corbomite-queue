@@ -78,12 +78,15 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->addedAt = (new DateTimeImmutable())
-            ->setTimestamp($val->getTimestamp());
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
 
         return $this->addedAt;
     }
 
-    /** @var DateTimeImmutable|null */
+    /** @var DateTimeInterface|null */
     private $finishedAt;
 
     public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
