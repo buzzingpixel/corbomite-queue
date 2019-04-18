@@ -9,6 +9,7 @@ use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 
 class ActionQueueItemModel implements ActionQueueItemModelInterface
 {
@@ -43,7 +44,10 @@ class ActionQueueItemModel implements ActionQueueItemModelInterface
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->finishedAt = (new DateTimeImmutable())
-            ->setTimestamp($val->getTimestamp());
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
 
         return $this->finishedAt;
     }

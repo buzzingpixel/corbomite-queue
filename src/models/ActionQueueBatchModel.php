@@ -7,9 +7,9 @@ namespace corbomite\queue\models;
 use corbomite\db\traits\UuidTrait;
 use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use InvalidArgumentException;
 use function is_array;
 
@@ -83,7 +83,7 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         return $this->addedAt;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeImmutable|null */
     private $finishedAt;
 
     public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
@@ -94,7 +94,10 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->finishedAt = (new DateTimeImmutable())
-            ->setTimestamp($val->getTimestamp());
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
 
         return $this->finishedAt;
     }
