@@ -46,10 +46,12 @@ class UpdateActionQueueService
                 return;
             }
 
-            $totalItems = $record->action_queue_items->count();
+            $totalItems = 0;
             $totalRun   = 0;
 
             foreach ($record->action_queue_items as $item) {
+                $totalItems++;
+
                 if (! $item->is_finished) {
                     continue;
                 }
