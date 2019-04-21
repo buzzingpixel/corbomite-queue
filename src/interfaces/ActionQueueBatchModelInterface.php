@@ -56,6 +56,11 @@ interface ActionQueueBatchModelInterface
     /**
      * Returns value. Sets value if incoming argument set.
      */
+    public function isRunning(?bool $val = null) : bool;
+
+    /**
+     * Returns value. Sets value if incoming argument set.
+     */
     public function isFinished(?bool $val = null) : bool;
 
     /**

@@ -83,6 +83,25 @@ class ActionQueueBatchModelTest extends TestCase
         self::assertTrue($model->isFinished());
     }
 
+    public function testIsRunning() : void
+    {
+        $model = new ActionQueueBatchModel();
+
+        self::assertFalse($model->isRunning());
+
+        self::assertTrue($model->isRunning(true));
+
+        self::assertTrue($model->isRunning());
+
+        self::assertFalse($model->isRunning(false));
+
+        self::assertFalse($model->isRunning());
+
+        $model = new ActionQueueBatchModel(['isRunning' => true]);
+
+        self::assertTrue($model->isRunning());
+    }
+
     public function testPercentComplete() : void
     {
         $model = new ActionQueueBatchModel();

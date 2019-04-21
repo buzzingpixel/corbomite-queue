@@ -52,6 +52,14 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
     }
 
     /** @var bool */
+    private $isRunning = false;
+
+    public function isRunning(?bool $val = null) : bool
+    {
+        return $this->isRunning = $val ?? $this->isRunning;
+    }
+
+    /** @var bool */
     private $isFinished = false;
 
     public function isFinished(?bool $val = null) : bool
