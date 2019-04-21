@@ -26,17 +26,27 @@ php app migrate/up
 
 ### Running the queue
 
+#### Development environment
+
 In dev, you'll probably just want to run the queue manually. The command to do that is:
 
 ```bash
 php app queue/run
 ```
 
-That command runs the next item in your queue. In production environments, that command should be run every second. In Linux environments, you're encouraged to use a shell script and Supervisor to keep the process running. See the [Example Shell Script](queueRunnerExampleScript.sh`).
+That command runs the next item in your queue.
+
+#### Production Environments
+
+As of 1.3.0, Corbomite Queue is multiple worker aware. That means you can and should have multiple workers running the queue/run command in a loop (how many workers will depend on how beefy your server environment is and how many resources you want consumed on the queue). The queue tracks which batches are running and which are not running. The next worker will pick up the next task in a batch that does not currently indicate it is running.
+
+An example shell script is provided in this repository for Linux environments. [Example Shell Script](queueRunnerExampleScript.sh`).
+
+You are encouraged to use Supervisor to set multiple workers to run this script.
 
 ### Adding to the queue
 
-The Queue API is provided to make things extremely easy to add items to the queue. Note that in the examples below, any class you specify to add the queue, Corbomite Queue will attempt to get it from the Dependency Injector first so you can use dependency injection if you want to.
+The Queue API is provided to make things extremely easy to add items to the queue. Note that in the examples below, any class you specify to add to the queue, Corbomite Queue will attempt to get it from the Dependency Injector first so you can use dependency injection if you want to.
 
 ```php
 <?php
