@@ -41,6 +41,8 @@ services:
       - db-volume:/var/lib/mysql
     ports:
       - "17296:3306"
+    networks:
+      corbomite-queue-network:
 
 volumes:
   composer-home-volume:
