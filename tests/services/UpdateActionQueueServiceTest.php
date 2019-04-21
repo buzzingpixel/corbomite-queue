@@ -89,13 +89,21 @@ class UpdateActionQueueServiceTest extends TestCase
 
         $record = $this->createMock(ActionQueueBatchRecord::class);
 
-        // action_queue_items
+        // is_running
         $record->expects(self::at(0))
+            ->method('__set')
+            ->with(
+                self::equalTo('is_running'),
+                self::equalTo(false)
+            );
+
+        // action_queue_items
+        $record->expects(self::at(1))
             ->method('__get')
             ->willReturn([$actionQueueItemRecord]);
 
         // is_finished
-        $record->expects(self::at(1))
+        $record->expects(self::at(2))
             ->method('__get')
             ->willReturn(true);
 
@@ -142,18 +150,26 @@ class UpdateActionQueueServiceTest extends TestCase
 
         $record = $this->createMock(ActionQueueBatchRecord::class);
 
-        // action_queue_items
+        // is_running
         $record->expects(self::at(0))
+            ->method('__set')
+            ->with(
+                self::equalTo('is_running'),
+                self::equalTo(false)
+            );
+
+        // action_queue_items
+        $record->expects(self::at(1))
             ->method('__get')
             ->willReturn([$actionQueueItemRecord]);
 
         // is_finished
-        $record->expects(self::at(1))
+        $record->expects(self::at(2))
             ->method('__get')
             ->willReturn(false);
 
         // is_finished
-        $record->expects(self::at(2))
+        $record->expects(self::at(3))
             ->method('__get')
             ->willReturn(false);
 
@@ -200,13 +216,21 @@ class UpdateActionQueueServiceTest extends TestCase
 
         $record = $this->createMock(ActionQueueBatchRecord::class);
 
-        // action_queue_items
+        // is_running
         $record->expects(self::at(0))
+            ->method('__set')
+            ->with(
+                self::equalTo('is_running'),
+                self::equalTo(false)
+            );
+
+        // action_queue_items
+        $record->expects(self::at(1))
             ->method('__get')
             ->willReturn([$actionQueueItemRecord]);
 
         // is_finished
-        $record->expects(self::at(1))
+        $record->expects(self::at(2))
             ->method('__get')
             ->willReturn(false);
 

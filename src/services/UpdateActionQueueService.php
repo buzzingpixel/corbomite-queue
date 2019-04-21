@@ -34,7 +34,7 @@ class UpdateActionQueueService
         $this->update($actionQueueGuid);
     }
 
-    public function update(string $actionQueueGuid) : void
+    public function update(string $actionQueueGuid, bool $markAsNotRunning = true) : void
     {
         try {
             $dateTime = new DateTime();
@@ -44,6 +44,10 @@ class UpdateActionQueueService
 
             if (! $record) {
                 return;
+            }
+
+            if ($markAsNotRunning) {
+                $record->is_running = false;
             }
 
             $totalItems = 0;
@@ -60,6 +64,8 @@ class UpdateActionQueueService
             }
 
             if ($totalRun >= $totalItems && $record->is_finished) {
+                $this->ormFactory->makeOrm()->persist($record);
+
                 return;
             }
 
