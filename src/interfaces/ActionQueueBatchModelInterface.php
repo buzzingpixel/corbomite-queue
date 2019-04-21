@@ -61,6 +61,11 @@ interface ActionQueueBatchModelInterface
     /**
      * Returns value. Sets value if incoming argument set.
      */
+    public function assumeDeadAfter(?DateTimeInterface $val = null) : ?DateTimeInterface;
+
+    /**
+     * Returns value. Sets value if incoming argument set.
+     */
     public function isFinished(?bool $val = null) : bool;
 
     /**

@@ -102,6 +102,67 @@ class ActionQueueBatchModelTest extends TestCase
         self::assertTrue($model->isRunning());
     }
 
+    /**
+     * @throws Throwable
+     */
+    public function testAssumeDeadAfter() : void
+    {
+        $testInitial = new DateTimeImmutable(
+            '+5 minutes',
+            new DateTimeZone('UTC')
+        );
+
+        $testInitialModel = new ActionQueueBatchModel();
+
+        self::assertEquals(
+            $testInitial->getTimestamp(),
+            $testInitialModel->assumeDeadAfter()->getTimestamp()
+        );
+
+        self::assertEquals(
+            $testInitial->getTimezone()->getName(),
+            $testInitialModel->assumeDeadAfter()->getTimezone()->getName()
+        );
+
+        $testInitial2 = new DateTimeImmutable(
+            '+20 years',
+            new DateTimeZone('UTC')
+        );
+
+        $testInitial2Model = new ActionQueueBatchModel(['assumeDeadAfter' => $testInitial2]);
+
+        self::assertEquals(
+            $testInitial2->getTimestamp(),
+            $testInitial2Model->assumeDeadAfter()->getTimestamp()
+        );
+
+        self::assertEquals(
+            $testInitial2->getTimezone()->getName(),
+            $testInitial2Model->assumeDeadAfter()->getTimezone()->getName()
+        );
+
+        $dateTime = new DateTime('+20 years', new DateTimeZone('America/Adak'));
+
+        $model = new ActionQueueBatchModel();
+
+        self::assertEquals(
+            $dateTime->getTimestamp(),
+            $model->assumeDeadAfter($dateTime)->getTimestamp()
+        );
+
+        self::assertEquals(
+            $dateTime->getTimestamp(),
+            $model->assumeDeadAfter()->getTimestamp()
+        );
+
+        self::assertEquals(
+            'America/Adak',
+            $model->assumeDeadAfter()->getTimezone()->getName()
+        );
+
+        self::assertInstanceOf(DateTimeImmutable::class, $model->assumeDeadAfter());
+    }
+
     public function testPercentComplete() : void
     {
         $model = new ActionQueueBatchModel();

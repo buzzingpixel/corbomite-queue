@@ -25,6 +25,16 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         foreach ($props as $key => $val) {
             $this->{$key}($val);
         }
+
+        if ($this->assumeDeadAfter) {
+            return;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assumeDeadAfter = new DateTimeImmutable(
+            '+5 minutes',
+            new DateTimeZone('UTC')
+        );
     }
 
     /** @var string */
@@ -57,6 +67,25 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
     public function isRunning(?bool $val = null) : bool
     {
         return $this->isRunning = $val ?? $this->isRunning;
+    }
+
+    /** @var DateTimeInterface */
+    private $assumeDeadAfter;
+
+    public function assumeDeadAfter(?DateTimeInterface $val = null) : DateTimeInterface
+    {
+        if (! $val) {
+            return $this->assumeDeadAfter;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assumeDeadAfter = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
+
+        return $this->assumeDeadAfter;
     }
 
     /** @var bool */
