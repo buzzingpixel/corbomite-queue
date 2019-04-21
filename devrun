@@ -10,10 +10,6 @@ declare(strict_types=1);
 
 use corbomite\di\Di;
 
-define('ENTRY_POINT', 'app');
-define('APP_BASE_PATH', __DIR__);
-define('APP_VENDOR_PATH', APP_BASE_PATH . '/vendor');
-
 putenv('DB_HOST=db');
 putenv('DB_DATABASE=site');
 putenv('DB_USER=site');
@@ -21,7 +17,7 @@ putenv('DB_PASSWORD=secret');
 putenv('CORBOMITE_DB_DATA_NAMESPACE=corbomite\queue\data');
 putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 
-require APP_VENDOR_PATH . '/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -59,6 +55,7 @@ function testAddToQueue() {
     $queueApi->addToQueue($batchModel);
 }
 // testAddToQueue();
+// die;
 
 function testGetNextQueueItem() {
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -69,6 +66,7 @@ function testGetNextQueueItem() {
     var_dump($item);
 }
 // testGetNextQueueItem();
+// die;
 
 function testMarkAsStoppedDueToError() {
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -77,6 +75,7 @@ function testMarkAsStoppedDueToError() {
     $queueApi->markAsStoppedDueToError($queueApi->getNextQueueItem());
 }
 // testMarkAsStoppedDueToError();
+// die;
 
 function testMarkItemAsRun() {
     /** @noinspection PhpUnhandledExceptionInspection */

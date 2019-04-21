@@ -49,7 +49,7 @@ class GetNextQueueItemService
                 return null;
             }
 
-            if ($markAsStarted && ! $actionQueueRecord->has_started) {
+            if ($markAsStarted) {
                 $actionQueueRecord->has_started = true;
                 $actionQueueRecord->is_running  = true;
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);

@@ -9,10 +9,12 @@ class Noop
     public function __invoke() : void
     {
         // var_dump('invoke');
+        // die;
     }
 
     public function noop() : void
     {
         // var_dump('noop');
+        // die;
     }
 }
