@@ -82,40 +82,55 @@ class FetchBatchesServiceTest extends TestCase
 
         $actionQueueBatchRecord->expects(self::at(4))
             ->method('__get')
-            ->with(self::equalTo('is_finished'))
+            ->with(self::equalTo('is_running'))
             ->willReturn(1);
 
         $actionQueueBatchRecord->expects(self::at(5))
             ->method('__get')
+            ->with(self::equalTo('assume_dead_after'))
+            ->willReturn('2009-04-11 22:22:49');
+
+        $actionQueueBatchRecord->expects(self::at(6))
+            ->method('__get')
+            ->with(self::equalTo('assume_dead_after_time_zone'))
+            ->willReturn('US/Central');
+
+        $actionQueueBatchRecord->expects(self::at(7))
+            ->method('__get')
+            ->with(self::equalTo('is_finished'))
+            ->willReturn(1);
+
+        $actionQueueBatchRecord->expects(self::at(8))
+            ->method('__get')
             ->with(self::equalTo('percent_complete'))
             ->willReturn(52);
 
-        $actionQueueBatchRecord->expects(self::at(6))
+        $actionQueueBatchRecord->expects(self::at(9))
             ->method('__get')
             ->with(self::equalTo('added_at'))
             ->willReturn('2019-04-11 22:22:49');
 
-        $actionQueueBatchRecord->expects(self::at(7))
+        $actionQueueBatchRecord->expects(self::at(10))
             ->method('__get')
             ->with(self::equalTo('added_at_time_zone'))
             ->willReturn('US/Eastern');
 
-        $actionQueueBatchRecord->expects(self::at(8))
+        $actionQueueBatchRecord->expects(self::at(11))
             ->method('__get')
             ->with(self::equalTo('finished_at'))
             ->willReturn('2016-04-11 12:22:49');
 
-        $actionQueueBatchRecord->expects(self::at(9))
+        $actionQueueBatchRecord->expects(self::at(12))
             ->method('__get')
             ->with(self::equalTo('finished_at'))
             ->willReturn('2016-04-11 12:22:49');
 
-        $actionQueueBatchRecord->expects(self::at(10))
+        $actionQueueBatchRecord->expects(self::at(13))
             ->method('__get')
             ->with(self::equalTo('finished_at_time_zone'))
             ->willReturn('US/Central');
 
-        $actionQueueBatchRecord->expects(self::at(11))
+        $actionQueueBatchRecord->expects(self::at(14))
             ->method('__get')
             ->with(self::equalTo('action_queue_items'))
             ->willReturn([$actionQueueItemRecord]);

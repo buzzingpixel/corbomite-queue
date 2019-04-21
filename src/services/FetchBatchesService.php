@@ -49,6 +49,12 @@ class FetchBatchesService
             $model->name($record->name);
             $model->title($record->title);
             $model->hasStarted((bool) $record->has_started);
+            $model->isRunning((bool) $record->is_running);
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $model->assumeDeadAfter(new DateTime(
+                $record->assume_dead_after,
+                new DateTimeZone($record->assume_dead_after_time_zone)
+            ));
             $model->isFinished((bool) $record->is_finished);
             $model->percentComplete((float) $record->percent_complete);
             /** @noinspection PhpUnhandledExceptionInspection */
