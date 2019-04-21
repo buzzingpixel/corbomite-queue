@@ -22,6 +22,9 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 
 return [
+    AddBatchToQueueService::class => static function () {
+        return new AddBatchToQueueService(new OrmFactory());
+    },
     CreateMigrationsAction::class => static function () {
         $appBasePath = null;
 
@@ -44,21 +47,6 @@ return [
             new PhpCalls()
         );
     },
-    RunQueueAction::class => static function (ContainerInterface $di) {
-        return new RunQueueAction($di);
-    },
-    QueueApi::class => static function (ContainerInterface $di) {
-        return new QueueApi(
-            $di,
-            new DbFactory()
-        );
-    },
-    QueueApiInterface::class => static function (ContainerInterface $di) {
-        return $di->get(QueueApi::class);
-    },
-    AddBatchToQueueService::class => static function () {
-        return new AddBatchToQueueService(new OrmFactory());
-    },
     FetchBatchesService::class => static function (ContainerInterface $di) {
         return new FetchBatchesService(
             $di->get(BuildQueryService::class)
@@ -75,6 +63,18 @@ return [
             new OrmFactory(),
             $di->get(UpdateActionQueueService::class)
         );
+    },
+    QueueApi::class => static function (ContainerInterface $di) {
+        return new QueueApi(
+            $di,
+            new DbFactory()
+        );
+    },
+    QueueApiInterface::class => static function (ContainerInterface $di) {
+        return $di->get(QueueApi::class);
+    },
+    RunQueueAction::class => static function (ContainerInterface $di) {
+        return new RunQueueAction($di);
     },
     UpdateActionQueueService::class => static function (ContainerInterface $di) {
         return new UpdateActionQueueService(
