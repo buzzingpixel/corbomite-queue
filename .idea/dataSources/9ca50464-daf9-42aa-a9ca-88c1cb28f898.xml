@@ -5251,89 +5251,111 @@
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1189" parent="402" name="is_finished">
+    <column id="1189" parent="402" name="is_running">
       <Position>5</Position>
+      <Comment>Whether this batch currently has a worker running it</Comment>
+      <DataType>tinyint(1)|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="1190" parent="402" name="assume_dead_after">
+      <Position>6</Position>
+      <Comment>The datetime representation of when the batch is to be assumed dead and picked up by another worker</Comment>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="1191" parent="402" name="is_finished">
+      <Position>7</Position>
       <Comment>Whether this batch has finished or not</Comment>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1190" parent="402" name="finished_due_to_error">
-      <Position>6</Position>
+    <column id="1192" parent="402" name="finished_due_to_error">
+      <Position>8</Position>
       <Comment>Whether this batch was marked finished do to an error</Comment>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1191" parent="402" name="percent_complete">
-      <Position>7</Position>
+    <column id="1193" parent="402" name="percent_complete">
+      <Position>9</Position>
       <Comment>The percentage of the batch completed</Comment>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1192" parent="402" name="added_at">
-      <Position>8</Position>
+    <column id="1194" parent="402" name="added_at">
+      <Position>10</Position>
       <Comment>The datetime representation of when the batch was added</Comment>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1193" parent="402" name="added_at_time_zone">
-      <Position>9</Position>
+    <column id="1195" parent="402" name="added_at_time_zone">
+      <Position>11</Position>
       <Comment>The timezone added_at was set with</Comment>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1194" parent="402" name="finished_at">
-      <Position>10</Position>
+    <column id="1196" parent="402" name="finished_at">
+      <Position>12</Position>
       <Comment>The datetime representation of when the batch was finished</Comment>
       <DataType>datetime|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1195" parent="402" name="finished_at_time_zone">
-      <Position>11</Position>
+    <column id="1197" parent="402" name="finished_at_time_zone">
+      <Position>13</Position>
       <Comment>The timezone finished_at was set with</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1196" parent="402" name="context">
-      <Position>12</Position>
+    <column id="1198" parent="402" name="context">
+      <Position>14</Position>
       <Comment>Not using JSON column type because of broad compatibility issues</Comment>
       <DataType>text|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="1197" parent="402" name="PRIMARY">
+    <column id="1199" parent="402" name="assume_dead_after_time_zone">
+      <Position>15</Position>
+      <Comment>The timezone assume_dead_after was set with</Comment>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="1200" parent="402" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>guid</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="1198" parent="403" name="guid">
+    <column id="1201" parent="403" name="guid">
       <Position>1</Position>
       <Comment>UUID generated in code and stored as binary</Comment>
       <DataType>binary(16)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1199" parent="403" name="action_queue_batch_guid">
+    <column id="1202" parent="403" name="action_queue_batch_guid">
       <Position>2</Position>
       <Comment>Associated batch UUID stored as binary</Comment>
       <DataType>binary(16)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1200" parent="403" name="order_to_run">
+    <column id="1203" parent="403" name="order_to_run">
       <Position>3</Position>
       <Comment>The order in which the items in this batch should run</Comment>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1201" parent="403" name="is_finished">
+    <column id="1204" parent="403" name="is_finished">
       <Position>4</Position>
       <Comment>Whether this batch has finished or not</Comment>
       <DataType>tinyint(1)|0s</DataType>
@@ -5341,72 +5363,72 @@
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1202" parent="403" name="finished_at">
+    <column id="1205" parent="403" name="finished_at">
       <Position>5</Position>
       <Comment>The datetime representation of when the item was finished</Comment>
       <DataType>datetime|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1203" parent="403" name="finished_at_time_zone">
+    <column id="1206" parent="403" name="finished_at_time_zone">
       <Position>6</Position>
       <Comment>The timezone finished_at was set with</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1204" parent="403" name="class">
+    <column id="1207" parent="403" name="class">
       <Position>7</Position>
       <Comment>The class that this item will use to run</Comment>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1205" parent="403" name="method">
+    <column id="1208" parent="403" name="method">
       <Position>8</Position>
       <Comment>The method on the class that this item will use to run</Comment>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1206" parent="403" name="context">
+    <column id="1209" parent="403" name="context">
       <Position>9</Position>
       <Comment>Not using JSON column type because of broad compatibility issues</Comment>
       <DataType>text|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="1207" parent="403" name="PRIMARY">
+    <key id="1210" parent="403" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>guid</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="1208" parent="404" name="version">
+    <column id="1211" parent="404" name="version">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1209" parent="404" name="migration_name">
+    <column id="1212" parent="404" name="migration_name">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1210" parent="404" name="start_time">
+    <column id="1213" parent="404" name="start_time">
       <Position>3</Position>
       <DataType>timestamp|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1211" parent="404" name="end_time">
+    <column id="1214" parent="404" name="end_time">
       <Position>4</Position>
       <DataType>timestamp|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="1212" parent="404" name="breakpoint">
+    <column id="1215" parent="404" name="breakpoint">
       <Position>5</Position>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="1213" parent="404" name="PRIMARY">
+    <key id="1216" parent="404" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>version</ColNames>
       <Primary>1</Primary>
