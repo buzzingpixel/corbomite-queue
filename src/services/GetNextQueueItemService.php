@@ -51,6 +51,7 @@ class GetNextQueueItemService
 
             if ($markAsStarted && ! $actionQueueRecord->has_started) {
                 $actionQueueRecord->has_started = true;
+                $actionQueueRecord->is_running  = true;
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);
             }
 
@@ -76,6 +77,7 @@ class GetNextQueueItemService
         $actionQueueBatchRecord = $this->ormFactory->makeOrm()
             ->select(ActionQueueBatch::class)
             ->where('is_finished = ', 0)
+            ->where('is_running = ', 0)
             ->with([
                 'action_queue_items' => static function (
                     ActionQueueItemSelect $selectReplies
