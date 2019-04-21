@@ -23,7 +23,10 @@ class AddIsRunningAssumeDeadAfterColsToBatchTable extends AbstractMigration
         ])
         ->update();
 
-        $table->addColumn('assume_dead_after_time_zone', 'string', ['comment' => 'The timezone assume_dead_after was set with'])
+        $table->addColumn('assume_dead_after_time_zone', 'string', [
+            'after' => 'assume_dead_after',
+            'comment' => 'The timezone assume_dead_after was set with',
+        ])
             ->update();
     }
 }
