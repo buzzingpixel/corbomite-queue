@@ -44,6 +44,7 @@
     },
     "extra": {
         "diConfigFilePath": "src/diConfig.php",
-        "cliActionConfigFilePath": "src/actionConfig.php"
+        "cliActionConfigFilePath": "src/actionConfig.php",
+        "scheduleConfigFilePath": "src/scheduleConfig.php"
     }
 }

@@ -12,6 +12,7 @@ use corbomite\queue\interfaces\QueueApiInterface;
 use corbomite\queue\PhpCalls;
 use corbomite\queue\QueueApi;
 use corbomite\queue\services\AddBatchToQueueService;
+use corbomite\queue\services\DeadBatchCheckService;
 use corbomite\queue\services\FetchBatchesService;
 use corbomite\queue\services\GetNextQueueItemService;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
@@ -45,6 +46,11 @@ return [
             $appBasePath,
             new Filesystem(),
             new PhpCalls()
+        );
+    },
+    DeadBatchCheckService::class => static function (ContainerInterface $di) {
+        return new DeadBatchCheckService(
+            new OrmFactory()
         );
     },
     FetchBatchesService::class => static function (ContainerInterface $di) {

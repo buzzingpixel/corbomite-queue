@@ -23,6 +23,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use corbomite\queue\Noop;
 use corbomite\queue\QueueApi;
+use corbomite\queue\services\DeadBatchCheckService;
 
 function testAddToQueue() {
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -84,3 +85,15 @@ function testMarkItemAsRun() {
     $queueApi->markItemAsRun($queueApi->getNextQueueItem());
 }
 // testMarkItemAsRun();
+// die;
+
+function runDeadBatchCheckService()
+{
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $deadBatchService = Di::diContainer()->get(DeadBatchCheckService::class);
+
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $deadBatchService();
+}
+// runDeadBatchCheckService();
+// die;
