@@ -69,20 +69,23 @@ class AddBatchToQueueService
             $order++;
         }
 
-        $record                        = $orm->newRecord(ActionQueueBatch::class);
-        $record->guid                  = $batchGuidBytes;
-        $record->name                  = $model->name();
-        $record->title                 = $model->title();
-        $record->has_started           = false;
-        $record->is_finished           = false;
-        $record->finished_due_to_error = false;
-        $record->percent_complete      = 0;
-        $record->added_at              = $dateTime->format('Y-m-d H:i:s');
-        $record->added_at_time_zone    = $dateTime->getTimezone()->getName();
-        $record->finished_at           = null;
-        $record->finished_at_time_zone = null;
-        $record->context               = json_encode($model->context());
-        $record->action_queue_items    = $items;
+        $record                              = $orm->newRecord(ActionQueueBatch::class);
+        $record->guid                        = $batchGuidBytes;
+        $record->name                        = $model->name();
+        $record->title                       = $model->title();
+        $record->has_started                 = false;
+        $record->is_running                  = false;
+        $record->assume_dead_after           = $model->assumeDeadAfter()->format('Y-m-d H:i:s');
+        $record->assume_dead_after_time_zone = $model->assumeDeadAfter()->getTimezone()->getName();
+        $record->is_finished                 = false;
+        $record->finished_due_to_error       = false;
+        $record->percent_complete            = 0;
+        $record->added_at                    = $dateTime->format('Y-m-d H:i:s');
+        $record->added_at_time_zone          = $dateTime->getTimezone()->getName();
+        $record->finished_at                 = null;
+        $record->finished_at_time_zone       = null;
+        $record->context                     = json_encode($model->context());
+        $record->action_queue_items          = $items;
 
         $orm->persist($record);
     }
