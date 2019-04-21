@@ -175,20 +175,44 @@ class IsValidTest extends TestCase
             );
 
         $record->expects(self::at(7))
+            ->method('__get')
+            ->with(self::equalTo('assume_dead_after'))
+            ->willReturn('assume_dead_after_test');
+
+        $record->expects(self::at(8))
+            ->method('__set')
+            ->with(
+                self::equalTo('initial_assume_dead_after'),
+                self::equalTo('assume_dead_after_test')
+            );
+
+        $record->expects(self::at(9))
+            ->method('__get')
+            ->with(self::equalTo('assume_dead_after_time_zone'))
+            ->willReturn('initial_assume_dead_after_time_zone_test');
+
+        $record->expects(self::at(10))
+            ->method('__set')
+            ->with(
+                self::equalTo('initial_assume_dead_after_time_zone'),
+                self::equalTo('initial_assume_dead_after_time_zone_test')
+            );
+
+        $record->expects(self::at(11))
             ->method('__set')
             ->with(
                 self::equalTo('is_finished'),
                 self::equalTo(false)
             );
 
-        $record->expects(self::at(8))
+        $record->expects(self::at(12))
             ->method('__set')
             ->with(
                 self::equalTo('finished_due_to_error'),
                 self::equalTo(false)
             );
 
-        $record->expects(self::at(9))
+        $record->expects(self::at(13))
             ->method('__set')
             ->with(
                 self::equalTo('percent_complete'),
@@ -198,42 +222,42 @@ class IsValidTest extends TestCase
         $dateTime = new DateTime();
         $dateTime->setTimezone(new DateTimeZone('UTC'));
 
-        $record->expects(self::at(10))
+        $record->expects(self::at(14))
             ->method('__set')
             ->with(
                 self::equalTo('added_at'),
                 self::equalTo($dateTime->format('Y-m-d H:i:s'))
             );
 
-        $record->expects(self::at(11))
+        $record->expects(self::at(15))
             ->method('__set')
             ->with(
                 self::equalTo('added_at_time_zone'),
                 self::equalTo($dateTime->getTimezone()->getName())
             );
 
-        $record->expects(self::at(12))
+        $record->expects(self::at(16))
             ->method('__set')
             ->with(
                 self::equalTo('finished_at'),
                 self::equalTo(null)
             );
 
-        $record->expects(self::at(13))
+        $record->expects(self::at(17))
             ->method('__set')
             ->with(
                 self::equalTo('finished_at_time_zone'),
                 self::equalTo(null)
             );
 
-        $record->expects(self::at(14))
+        $record->expects(self::at(18))
             ->method('__set')
             ->with(
                 self::equalTo('context'),
                 self::equalTo(json_encode($modelContext))
             );
 
-        $record->expects(self::at(15))
+        $record->expects(self::at(19))
             ->method('__set')
             ->with(
                 self::equalTo('action_queue_items'),
