@@ -88,6 +88,39 @@ class ActionQueueBatchTable extends Table
             'primary' => false,
             'options' => null,
         ],
+        'assume_dead_after_time_zone' => [
+            'name' => 'assume_dead_after_time_zone',
+            'type' => 'varchar',
+            'size' => 255,
+            'scale' => null,
+            'notnull' => true,
+            'default' => null,
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
+        'initial_assume_dead_after' => [
+            'name' => 'initial_assume_dead_after',
+            'type' => 'datetime',
+            'size' => null,
+            'scale' => null,
+            'notnull' => true,
+            'default' => null,
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
+        'initial_assume_dead_after_time_zone' => [
+            'name' => 'initial_assume_dead_after_time_zone',
+            'type' => 'varchar',
+            'size' => 255,
+            'scale' => null,
+            'notnull' => true,
+            'default' => null,
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
         'is_finished' => [
             'name' => 'is_finished',
             'type' => 'tinyint',
@@ -176,17 +209,6 @@ class ActionQueueBatchTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'assume_dead_after_time_zone' => [
-            'name' => 'assume_dead_after_time_zone',
-            'type' => 'varchar',
-            'size' => 255,
-            'scale' => null,
-            'notnull' => true,
-            'default' => null,
-            'autoinc' => false,
-            'primary' => false,
-            'options' => null,
-        ],
     ];
 
     const COLUMN_NAMES = [
@@ -196,6 +218,9 @@ class ActionQueueBatchTable extends Table
         'has_started',
         'is_running',
         'assume_dead_after',
+        'assume_dead_after_time_zone',
+        'initial_assume_dead_after',
+        'initial_assume_dead_after_time_zone',
         'is_finished',
         'finished_due_to_error',
         'percent_complete',
@@ -204,7 +229,6 @@ class ActionQueueBatchTable extends Table
         'finished_at',
         'finished_at_time_zone',
         'context',
-        'assume_dead_after_time_zone',
     ];
 
     const COLUMN_DEFAULTS = [
@@ -214,6 +238,9 @@ class ActionQueueBatchTable extends Table
         'has_started' => 0,
         'is_running' => 0,
         'assume_dead_after' => null,
+        'assume_dead_after_time_zone' => null,
+        'initial_assume_dead_after' => null,
+        'initial_assume_dead_after_time_zone' => null,
         'is_finished' => 0,
         'finished_due_to_error' => 0,
         'percent_complete' => 0.0,
@@ -222,7 +249,6 @@ class ActionQueueBatchTable extends Table
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',
         'context' => 'NULL',
-        'assume_dead_after_time_zone' => null,
     ];
 
     const PRIMARY_KEY = [

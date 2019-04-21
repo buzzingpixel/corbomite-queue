@@ -27,6 +27,18 @@ class AddIsRunningAssumeDeadAfterColsToBatchTable extends AbstractMigration
             'after' => 'assume_dead_after',
             'comment' => 'The timezone assume_dead_after was set with',
         ])
-            ->update();
+        ->update();
+
+        $table->addColumn('initial_assume_dead_after', 'datetime', [
+            'after' => 'assume_dead_after_time_zone',
+            'comment' => 'The datetime representation of the initial value for when the batch is to be assumed dead and picked up by another worker',
+        ])
+        ->update();
+
+        $table->addColumn('initial_assume_dead_after_time_zone', 'string', [
+            'after' => 'initial_assume_dead_after',
+            'comment' => 'The timezone initial_assume_dead_after was set with',
+        ])
+        ->update();
     }
 }
