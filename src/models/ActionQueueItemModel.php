@@ -1,22 +1,23 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\models;
 
-use DateTime;
 use corbomite\db\traits\UuidTrait;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
 
 class ActionQueueItemModel implements ActionQueueItemModelInterface
 {
     use UuidTrait;
 
+    /**
+     * @param mixed[] $props
+     */
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
@@ -24,9 +25,10 @@ class ActionQueueItemModel implements ActionQueueItemModelInterface
         }
     }
 
+    /** @var bool */
     private $isFinished = false;
 
-    public function isFinished(?bool $val = null): bool
+    public function isFinished(?bool $val = null) : bool
     {
         return $this->isFinished = $val ?? $this->isFinished;
     }
@@ -34,28 +36,47 @@ class ActionQueueItemModel implements ActionQueueItemModelInterface
     /** @var DateTime|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $val = null): ?DateTime
+    public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->finishedAt = $val ?? $this->finishedAt;
+        if (! $val) {
+            return $this->finishedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->finishedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
+
+        return $this->finishedAt;
     }
 
+    /** @var string */
     private $class = '';
 
-    public function class(?string $val = null): string
+    public function class(?string $val = null) : string
     {
         return $this->class = $val ?? $this->class;
     }
 
+    /** @var string */
     private $method = '__invoke';
 
-    public function method(?string $val = null): string
+    public function method(?string $val = null) : string
     {
         return $this->method = $val ?? $this->method;
     }
 
+    /** @var mixed[] */
     private $context = [];
 
-    public function context(?array $val = null): array
+    /**
+     * @param mixed[]|null $val
+     *
+     * @return mixed[]
+     */
+    public function context(?array $val = null) : array
     {
         return $this->context = $val ?? $this->context;
     }

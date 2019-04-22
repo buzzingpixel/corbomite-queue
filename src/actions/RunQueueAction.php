@@ -1,33 +1,30 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\actions;
 
-use Throwable;
-use corbomite\di\Di;
-use corbomite\queue\QueueApi;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\interfaces\QueueApiInterface;
+use Psr\Container\ContainerInterface;
+use Throwable;
 
 class RunQueueAction
 {
+    /** @var ContainerInterface */
     private $di;
+    /** @var QueueApiInterface */
     private $queueApi;
 
-    public function __construct(Di $di)
+    public function __construct(ContainerInterface $di)
     {
         $this->di = $di;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->queueApi = $di->getFromDefinition(QueueApi::class);
+        $this->queueApi = $di->get(QueueApiInterface::class);
     }
 
-    public function __invoke()
+    public function __invoke() : ?int
     {
         $item = $this->queueApi->getNextQueueItem(true);
 
@@ -39,22 +36,23 @@ class RunQueueAction
             return $this->run($item);
         } catch (Throwable $e) {
             $this->queueApi->markAsStoppedDueToError($item);
+
             return 1;
         }
     }
 
-    private function run(ActionQueueItemModelInterface $item): ?int
+    private function run(ActionQueueItemModelInterface $item) : ?int
     {
         $constructedClass = null;
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        if ($this->di->hasDefinition($item->class())) {
+        if ($this->di->has($item->class())) {
             /** @noinspection PhpUnhandledExceptionInspection */
-            $constructedClass = $this->di->makeFromDefinition($item->class());
+            $constructedClass = $this->di->get($item->class());
         }
 
         if (! $constructedClass) {
-            $class = $item->class();
+            $class            = $item->class();
             $constructedClass = new $class();
         }
 

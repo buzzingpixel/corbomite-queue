@@ -1,102 +1,177 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\models;
 
-use DateTime;
 use corbomite\db\traits\UuidTrait;
-use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use InvalidArgumentException;
+use function is_array;
 
 class ActionQueueBatchModel implements ActionQueueBatchModelInterface
 {
     use UuidTrait;
 
+    /**
+     * @param mixed[] $props
+     */
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
             $this->{$key}($val);
         }
+
+        if ($this->assumeDeadAfter) {
+            return;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assumeDeadAfter = new DateTimeImmutable(
+            '+5 minutes',
+            new DateTimeZone('UTC')
+        );
     }
 
+    /** @var string */
     private $name = '';
 
-    public function name(?string $val = null): string
+    public function name(?string $val = null) : string
     {
         return $this->name = $val ?? $this->name;
     }
 
+    /** @var string */
     private $title = '';
 
-    public function title(?string $val = null): string
+    public function title(?string $val = null) : string
     {
         return $this->title = $val ?? $this->title;
     }
 
+    /** @var bool */
     private $hasStarted = false;
 
-    public function hasStarted(?bool $val = null): bool
+    public function hasStarted(?bool $val = null) : bool
     {
         return $this->hasStarted = $val ?? $this->hasStarted;
     }
 
+    /** @var bool */
+    private $isRunning = false;
+
+    public function isRunning(?bool $val = null) : bool
+    {
+        return $this->isRunning = $val ?? $this->isRunning;
+    }
+
+    /** @var DateTimeInterface */
+    private $assumeDeadAfter;
+
+    public function assumeDeadAfter(?DateTimeInterface $val = null) : DateTimeInterface
+    {
+        if (! $val) {
+            return $this->assumeDeadAfter;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assumeDeadAfter = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
+
+        return $this->assumeDeadAfter;
+    }
+
+    /** @var bool */
     private $isFinished = false;
 
-    public function isFinished(?bool $val = null): bool
+    public function isFinished(?bool $val = null) : bool
     {
         return $this->isFinished = $val ?? $this->isFinished;
     }
 
+    /** @var float */
     private $percentComplete = 0.0;
 
-    public function percentComplete(?float $val = null): float
+    public function percentComplete(?float $val = null) : float
     {
         return $this->percentComplete = $val ?? $this->percentComplete;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $addedAt;
 
-    public function addedAt(?DateTime $addedAt = null): ?DateTime
+    public function addedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->addedAt = $addedAt ?? $this->addedAt;
+        if (! $val) {
+            return $this->addedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->addedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
+
+        return $this->addedAt;
     }
 
-    /** @var DateTime|null */
+    /** @var DateTimeInterface|null */
     private $finishedAt;
 
-    public function finishedAt(?DateTime $val = null): ?DateTime
+    public function finishedAt(?DateTimeInterface $val = null) : ?DateTimeInterface
     {
-        return $this->finishedAt = $val ?? $this->finishedAt;
+        if (! $val) {
+            return $this->finishedAt;
+        }
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->finishedAt = (new DateTimeImmutable())
+            ->setTimestamp($val->getTimestamp())
+            ->setTimezone(new DateTimeZone(
+                $val->getTimezone()->getName()
+            ));
+
+        return $this->finishedAt;
     }
 
+    /** @var mixed[] */
     private $context = [];
 
-    public function context(?array $val = null): array
+    /**
+     * @param mixed[] $val
+     *
+     * @return mixed[]
+     */
+    public function context(?array $val = null) : array
     {
         return $this->context = $val ?? $this->context;
     }
 
+    /** @var ActionQueueItemModelInterface[] */
     private $items = [];
 
     /**
+     * @param ActionQueueItemModelInterface[]|null $val
+     *
      * @return ActionQueueItemModelInterface[]
      */
-    public function items(?array $val = null): array
+    public function items(?array $val = null) : array
     {
-        if (\is_array($val)) {
+        if (is_array($val)) {
             foreach ($val as $item) {
                 if ($item instanceof ActionQueueItemModelInterface) {
                     continue;
                 }
 
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     '$items must be an array of ActionQueueItemModelInterface'
                 );
             }
@@ -105,7 +180,7 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         return $this->items = $val ?? $this->items;
     }
 
-    public function addItem(ActionQueueItemModelInterface $val)
+    public function addItem(ActionQueueItemModelInterface $val) : void
     {
         $this->items[] = $val;
     }

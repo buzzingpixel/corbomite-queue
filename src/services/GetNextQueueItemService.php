@@ -1,24 +1,22 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\services;
 
-use Throwable;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
-use corbomite\queue\interfaces\ActionQueueItemModelInterface;
-use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
+use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
+use corbomite\queue\models\ActionQueueItemModel;
+use Throwable;
+use function is_array;
+use function json_decode;
 
 class GetNextQueueItemService
 {
+    /** @var OrmFactory */
     private $ormFactory;
 
     public function __construct(OrmFactory $ormFactory)
@@ -26,12 +24,12 @@ class GetNextQueueItemService
         $this->ormFactory = $ormFactory;
     }
 
-    public function __invoke(bool $markAsStarted = false): ?ActionQueueItemModelInterface
+    public function __invoke(bool $markAsStarted = false) : ?ActionQueueItemModelInterface
     {
         return $this->get($markAsStarted);
     }
 
-    public function get(bool $markAsStarted = false): ?ActionQueueItemModelInterface
+    public function get(bool $markAsStarted = false) : ?ActionQueueItemModelInterface
     {
         try {
             $actionQueueRecord = $this->fetchActionQueueBatchRecord();
@@ -40,20 +38,20 @@ class GetNextQueueItemService
                 return null;
             }
 
-            $item = $actionQueueRecord->action_queue_items->getOneBy([
-                'is_finished' => 0
-            ]);
+            $item = $actionQueueRecord->action_queue_items->getOneBy(['is_finished' => 0]);
 
             if (! $item) {
-                $actionQueueRecord->has_started = true;
-                $actionQueueRecord->is_finished = true;
+                $actionQueueRecord->has_started      = true;
+                $actionQueueRecord->is_finished      = true;
                 $actionQueueRecord->percent_complete = 100;
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);
+
                 return null;
             }
 
-            if ($markAsStarted && ! $actionQueueRecord->has_started) {
+            if ($markAsStarted) {
                 $actionQueueRecord->has_started = true;
+                $actionQueueRecord->is_running  = true;
                 $this->ormFactory->makeOrm()->persist($actionQueueRecord);
             }
 
@@ -72,22 +70,23 @@ class GetNextQueueItemService
         }
     }
 
-    private function fetchActionQueueBatchRecord(): ?ActionQueueBatchRecord
+    private function fetchActionQueueBatchRecord() : ?ActionQueueBatchRecord
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @var ActionQueueBatchRecord $actionQueueBatchRecord */
         $actionQueueBatchRecord = $this->ormFactory->makeOrm()
             ->select(ActionQueueBatch::class)
             ->where('is_finished = ', 0)
+            ->where('is_running = ', 0)
             ->with([
-                'action_queue_items' => function (
+                'action_queue_items' => static function (
                     ActionQueueItemSelect $selectReplies
-                ) {
+                ) : void {
                     $selectReplies
                         ->where('is_finished = ', 0)
                         ->limit(1)
                         ->orderBy('order_to_run ASC');
-                }
+                },
             ])
             ->orderBy('added_at ASC')
             ->fetchRecord();

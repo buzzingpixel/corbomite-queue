@@ -1,25 +1,24 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\services;
 
+use corbomite\db\Factory as OrmFactory;
+use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
+use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
+use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
+use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
+use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use DateTime;
 use DateTimeZone;
-use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\data\ActionQueueItem\ActionQueueItem;
-use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
-use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
-use corbomite\queue\interfaces\ActionQueueItemModelInterface;
-use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
+use function is_object;
+use function json_encode;
+use function method_exists;
 
 class AddBatchToQueueService
 {
+    /** @var OrmFactory */
     private $ormFactory;
 
     public function __construct(OrmFactory $ormFactory)
@@ -30,7 +29,7 @@ class AddBatchToQueueService
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    public function __invoke(ActionQueueBatchModelInterface $model): void
+    public function __invoke(ActionQueueBatchModelInterface $model) : void
     {
         $this->add($model);
     }
@@ -38,7 +37,7 @@ class AddBatchToQueueService
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    public function add(ActionQueueBatchModelInterface $model): void
+    public function add(ActionQueueBatchModelInterface $model) : void
     {
         $orm = $this->ormFactory->makeOrm();
 
@@ -64,26 +63,31 @@ class AddBatchToQueueService
                 'finished_at_time_zone' => null,
                 'class' => $item->class(),
                 'method' => $item->method(),
-                'context' => \json_encode($item->context()),
+                'context' => json_encode($item->context()),
             ]);
 
             $order++;
         }
 
-        $record = $orm->newRecord(ActionQueueBatch::class);
-        $record->guid = $batchGuidBytes;
-        $record->name = $model->name();
-        $record->title = $model->title();
-        $record->has_started = false;
-        $record->is_finished = false;
-        $record->finished_due_to_error = false;
-        $record->percent_complete = 0;
-        $record->added_at = $dateTime->format('Y-m-d H:i:s');
-        $record->added_at_time_zone = $dateTime->getTimezone()->getName();
-        $record->finished_at = null;
-        $record->finished_at_time_zone = null;
-        $record->context = \json_encode($model->context());
-        $record->action_queue_items = $items;
+        $record                                      = $orm->newRecord(ActionQueueBatch::class);
+        $record->guid                                = $batchGuidBytes;
+        $record->name                                = $model->name();
+        $record->title                               = $model->title();
+        $record->has_started                         = false;
+        $record->is_running                          = false;
+        $record->assume_dead_after                   = $model->assumeDeadAfter()->format('Y-m-d H:i:s');
+        $record->assume_dead_after_time_zone         = $model->assumeDeadAfter()->getTimezone()->getName();
+        $record->initial_assume_dead_after           = $record->assume_dead_after;
+        $record->initial_assume_dead_after_time_zone = $record->assume_dead_after_time_zone;
+        $record->is_finished                         = false;
+        $record->finished_due_to_error               = false;
+        $record->percent_complete                    = 0;
+        $record->added_at                            = $dateTime->format('Y-m-d H:i:s');
+        $record->added_at_time_zone                  = $dateTime->getTimezone()->getName();
+        $record->finished_at                         = null;
+        $record->finished_at_time_zone               = null;
+        $record->context                             = json_encode($model->context());
+        $record->action_queue_items                  = $items;
 
         $orm->persist($record);
     }
@@ -91,12 +95,11 @@ class AddBatchToQueueService
     /**
      * @throws InvalidActionQueueBatchModel
      */
-    private function validateModel(ActionQueueBatchModelInterface $model): void
+    private function validateModel(ActionQueueBatchModelInterface $model) : void
     {
         if (! $model->name() ||
             ! $model->title() ||
-            ! $model->items() ||
-            ! \is_array($model->items())
+            ! $model->items()
         ) {
             throw new InvalidActionQueueBatchModel();
         }
@@ -104,7 +107,7 @@ class AddBatchToQueueService
         foreach ($model->items() as $item) {
             $instance = $item instanceof ActionQueueItemModelInterface;
 
-            if (! \is_object($item) || ! $instance || ! $item->class()) {
+            if (! is_object($item) || ! $instance || ! $item->class()) {
                 throw new InvalidActionQueueBatchModel();
             }
 

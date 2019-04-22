@@ -1,28 +1,24 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\queue\services;
 
-use DateTime;
-use DateTimeZone;
-use corbomite\queue\models\ActionQueueItemModel;
 use corbomite\db\interfaces\BuildQueryInterface;
 use corbomite\db\interfaces\QueryModelInterface;
-use corbomite\queue\models\ActionQueueBatchModel;
 use corbomite\queue\data\ActionQueueBatch\ActionQueueBatch;
-use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
+use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemRecord;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemSelect;
-use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
+use corbomite\queue\interfaces\ActionQueueBatchModelInterface;
+use corbomite\queue\models\ActionQueueBatchModel;
+use corbomite\queue\models\ActionQueueItemModel;
+use DateTime;
+use DateTimeZone;
 
 class FetchBatchesService
 {
+    /** @var BuildQueryInterface */
     private $buildQuery;
 
     public function __construct(
@@ -34,7 +30,7 @@ class FetchBatchesService
     /**
      * @return ActionQueueBatchModelInterface[]
      */
-    public function __invoke(QueryModelInterface $params): array
+    public function __invoke(QueryModelInterface $params) : array
     {
         return $this->fetch($params);
     }
@@ -42,7 +38,7 @@ class FetchBatchesService
     /**
      * @return ActionQueueBatchModelInterface[]
      */
-    public function fetch(QueryModelInterface $params): array
+    public function fetch(QueryModelInterface $params) : array
     {
         $models = [];
 
@@ -53,6 +49,12 @@ class FetchBatchesService
             $model->name($record->name);
             $model->title($record->title);
             $model->hasStarted((bool) $record->has_started);
+            $model->isRunning((bool) $record->is_running);
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $model->assumeDeadAfter(new DateTime(
+                $record->assume_dead_after,
+                new DateTimeZone($record->assume_dead_after_time_zone)
+            ));
             $model->isFinished((bool) $record->is_finished);
             $model->percentComplete((float) $record->percent_complete);
             /** @noinspection PhpUnhandledExceptionInspection */
@@ -95,17 +97,16 @@ class FetchBatchesService
     }
 
     /**
-     * @param $params
      * @return ActionQueueBatchRecord[]
      */
-    private function fetchResults($params): array
+    private function fetchResults(QueryModelInterface $params) : array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         return $this->buildQuery->build(ActionQueueBatch::class, $params)
             ->with([
-                'action_queue_items' => function (ActionQueueItemSelect $select) {
+                'action_queue_items' => static function (ActionQueueItemSelect $select) : void {
                     $select->orderBy('order_to_run ASC');
-                }
+                },
             ])
             ->fetchRecords();
     }

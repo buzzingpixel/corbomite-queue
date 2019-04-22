@@ -1,66 +1,90 @@
 <?php
+
 declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
-
-use corbomite\di\Di;
-use corbomite\queue\QueueApi;
+use Composer\Autoload\ClassLoader;
 use corbomite\db\Factory as DbFactory;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\queue\actions\RunQueueAction;
 use corbomite\db\services\BuildQueryService;
-use corbomite\queue\services\FetchBatchesService;
-use corbomite\queue\services\MarkItemAsRunService;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\queue\actions\CreateMigrationsAction;
+use corbomite\queue\actions\RunQueueAction;
+use corbomite\queue\interfaces\QueueApiInterface;
+use corbomite\queue\PhpCalls;
+use corbomite\queue\QueueApi;
 use corbomite\queue\services\AddBatchToQueueService;
+use corbomite\queue\services\DeadBatchCheckService;
+use corbomite\queue\services\FetchBatchesService;
 use corbomite\queue\services\GetNextQueueItemService;
-use corbomite\queue\services\UpdateActionQueueService;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
+use corbomite\queue\services\MarkItemAsRunService;
+use corbomite\queue\services\UpdateActionQueueService;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 
 return [
-    CreateMigrationsAction::class => function () {
+    AddBatchToQueueService::class => static function () {
+        return new AddBatchToQueueService(new OrmFactory());
+    },
+    CreateMigrationsAction::class => static function () {
+        $appBasePath = null;
+
+        if (defined('APP_BASE_PATH')) {
+            $appBasePath = APP_BASE_PATH;
+        }
+
+        if (! $appBasePath) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $reflection = new ReflectionClass(ClassLoader::class);
+
+            $appBasePath = dirname($reflection->getFileName(), 3);
+        }
+
         return new CreateMigrationsAction(
             __DIR__ . '/migrations',
-            new ConsoleOutput()
+            new ConsoleOutput(),
+            $appBasePath,
+            new Filesystem(),
+            new PhpCalls()
         );
     },
-    RunQueueAction::class => function () {
-        return new RunQueueAction(new Di());
+    DeadBatchCheckService::class => static function (ContainerInterface $di) {
+        return new DeadBatchCheckService(
+            new OrmFactory()
+        );
     },
-    QueueApi::class => function () {
+    FetchBatchesService::class => static function (ContainerInterface $di) {
+        return new FetchBatchesService(
+            $di->get(BuildQueryService::class)
+        );
+    },
+    GetNextQueueItemService::class => static function () {
+        return new GetNextQueueItemService(new OrmFactory());
+    },
+    MarkAsStoppedDueToErrorService::class => static function () {
+        return new MarkAsStoppedDueToErrorService(new OrmFactory());
+    },
+    MarkItemAsRunService::class => static function (ContainerInterface $di) {
+        return new MarkItemAsRunService(
+            new OrmFactory(),
+            $di->get(UpdateActionQueueService::class)
+        );
+    },
+    QueueApi::class => static function (ContainerInterface $di) {
         return new QueueApi(
-            new Di(),
+            $di,
             new DbFactory()
         );
     },
-    AddBatchToQueueService::class => function () {
-        return new AddBatchToQueueService(new OrmFactory());
+    QueueApiInterface::class => static function (ContainerInterface $di) {
+        return $di->get(QueueApi::class);
     },
-    FetchBatchesService::class => function () {
-        return new FetchBatchesService(
-            Di::get(BuildQueryService::class)
-        );
+    RunQueueAction::class => static function (ContainerInterface $di) {
+        return new RunQueueAction($di);
     },
-    GetNextQueueItemService::class => function () {
-        return new GetNextQueueItemService(new OrmFactory());
-    },
-    MarkAsStoppedDueToErrorService::class => function () {
-        return new MarkAsStoppedDueToErrorService(new OrmFactory());
-    },
-    MarkItemAsRunService::class => function () {
-        return new MarkItemAsRunService(
-            new OrmFactory(),
-            Di::get(UpdateActionQueueService::class)
-        );
-    },
-    UpdateActionQueueService::class => function () {
+    UpdateActionQueueService::class => static function (ContainerInterface $di) {
         return new UpdateActionQueueService(
-            Di::get(QueueApi::class),
+            $di->get(QueueApiInterface::class),
             new OrmFactory()
         );
     },

@@ -25,7 +25,7 @@ class ActionQueueItemRow extends Row
         'guid' => null,
         'action_queue_batch_guid' => null,
         'order_to_run' => null,
-        'is_finished' => '0',
+        'is_finished' => 0,
         'finished_at' => 'NULL',
         'finished_at_time_zone' => 'NULL',
         'class' => null,

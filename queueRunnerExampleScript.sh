@@ -28,5 +28,5 @@ PATH_TO_APP_FILE=/path/to/projet/app;
 # Run the queue every second infinitely
 while true; do
     php ${PATH_TO_APP_FILE} queue/run;
-    sleep 1;
+    sleep 0.5;
 done
