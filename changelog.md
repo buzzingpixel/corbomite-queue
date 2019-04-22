@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2019-04-21
+## [1.3.0] - 2019-04-22
 ### Added
 - Added the QueueApiInterface to the DI definitions
 - Made Corbomite Queue multiple-worker aware. Set up multiple workers to run the queue. Each batch keeps track of whether a worker is currently running it or not.
