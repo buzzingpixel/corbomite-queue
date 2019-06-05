@@ -13,6 +13,7 @@ putenv('CORBOMITE_DB_DATA_NAMESPACE=corbomite\queue\data');
 putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/devMode.php';
 
 /** @noinspection PhpUnhandledExceptionInspection */
 Di::diContainer()->get(Kernel::class)($argv);

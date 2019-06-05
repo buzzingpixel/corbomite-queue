@@ -35,7 +35,7 @@ class RunQueueAction
         try {
             return $this->run($item);
         } catch (Throwable $e) {
-            $this->queueApi->markAsStoppedDueToError($item);
+            $this->queueApi->markAsStoppedDueToError($item, $e);
 
             return 1;
         }
