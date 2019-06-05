@@ -20,6 +20,7 @@ use corbomite\queue\services\MarkAsStoppedDueToErrorService;
 use corbomite\queue\services\MarkItemAsRunService;
 use corbomite\queue\services\UpdateActionQueueService;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 class QueueApi implements QueueApiInterface
 {
@@ -78,11 +79,11 @@ class QueueApi implements QueueApiInterface
         return $service->get($markAsStarted);
     }
 
-    public function markAsStoppedDueToError(ActionQueueItemModelInterface $model) : void
+    public function markAsStoppedDueToError(ActionQueueItemModelInterface $model, ?Throwable $e = null) : void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $service = $this->di->get(MarkAsStoppedDueToErrorService::class);
-        $service->markStopped($model);
+        $service->markStopped($model, $e);
     }
 
     public function markItemAsRun(ActionQueueItemModelInterface $model) : void

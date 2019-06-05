@@ -6,6 +6,7 @@ namespace corbomite\queue\interfaces;
 
 use corbomite\db\interfaces\QueryModelInterface;
 use corbomite\queue\exceptions\InvalidActionQueueBatchModel;
+use Throwable;
 
 interface QueueApiInterface
 {
@@ -52,7 +53,7 @@ interface QueueApiInterface
      *
      * @return mixed
      */
-    public function markAsStoppedDueToError(ActionQueueItemModelInterface $model);
+    public function markAsStoppedDueToError(ActionQueueItemModelInterface $model, ?Throwable $e = null);
 
     /**
      * Marks an item as run
