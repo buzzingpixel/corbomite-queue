@@ -70,6 +70,16 @@ interface ActionQueueBatchModelInterface
 
     /**
      * Returns value. Sets value if incoming argument set.
+     */
+    public function finishedDueToError(?bool $val = null) : bool;
+
+    /**
+     * Returns value. Sets value if incoming argument set.
+     */
+    public function errorMessage(?string $val = null) : string;
+
+    /**
+     * Returns value. Sets value if incoming argument set.
      *
      * @param bool|null $val
      */

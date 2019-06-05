@@ -96,6 +96,22 @@ class ActionQueueBatchModel implements ActionQueueBatchModelInterface
         return $this->isFinished = $val ?? $this->isFinished;
     }
 
+    /** @var bool */
+    private $finishedDueToError = false;
+
+    public function finishedDueToError(?bool $val = null) : bool
+    {
+        return $this->finishedDueToError = $val ?? $this->finishedDueToError;
+    }
+
+    /** @var string */
+    private $errorMessage = '';
+
+    public function errorMessage(?string $val = null) : string
+    {
+        return $this->errorMessage = $val ?? $this->errorMessage;
+    }
+
     /** @var float */
     private $percentComplete = 0.0;
 
