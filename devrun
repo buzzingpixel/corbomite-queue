@@ -65,7 +65,7 @@ function testGetNextQueueItem() {
 
     $item = $queueApi->getNextQueueItem();
 
-    var_dump($item);
+    dd($item);
 }
 // testGetNextQueueItem();
 // die;
@@ -97,4 +97,17 @@ function runDeadBatchCheckService()
     $deadBatchService();
 }
 // runDeadBatchCheckService();
+// die;
+
+function getBatches()
+{
+    /** @noinspection PhpUnhandledExceptionInspection */
+    /** @var QueueApi $queueApi */
+    $queueApi = Di::diContainer()->get(QueueApi::class);
+
+    $queryModel = $queueApi->makeQueryModel();
+
+    dd($queueApi->fetchAllBatches($queryModel)[1]);
+}
+// getBatches();
 // die;

@@ -56,6 +56,8 @@ class FetchBatchesService
                 new DateTimeZone($record->assume_dead_after_time_zone)
             ));
             $model->isFinished((bool) $record->is_finished);
+            $model->finishedDueToError((bool) $record->finished_due_to_error);
+            $model->errorMessage($record->error_message);
             $model->percentComplete((float) $record->percent_complete);
             /** @noinspection PhpUnhandledExceptionInspection */
             $model->addedAt(new DateTime(

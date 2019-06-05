@@ -102,35 +102,45 @@ class FetchBatchesServiceTest extends TestCase
 
         $actionQueueBatchRecord->expects(self::at(8))
             ->method('__get')
+            ->with(self::equalTo('finished_due_to_error'))
+            ->willReturn(1);
+
+        $actionQueueBatchRecord->expects(self::at(9))
+            ->method('__get')
+            ->with(self::equalTo('error_message'))
+            ->willReturn('testError');
+
+        $actionQueueBatchRecord->expects(self::at(10))
+            ->method('__get')
             ->with(self::equalTo('percent_complete'))
             ->willReturn(52);
 
-        $actionQueueBatchRecord->expects(self::at(9))
+        $actionQueueBatchRecord->expects(self::at(11))
             ->method('__get')
             ->with(self::equalTo('added_at'))
             ->willReturn('2019-04-11 22:22:49');
 
-        $actionQueueBatchRecord->expects(self::at(10))
+        $actionQueueBatchRecord->expects(self::at(12))
             ->method('__get')
             ->with(self::equalTo('added_at_time_zone'))
             ->willReturn('US/Eastern');
 
-        $actionQueueBatchRecord->expects(self::at(11))
-            ->method('__get')
-            ->with(self::equalTo('finished_at'))
-            ->willReturn('2016-04-11 12:22:49');
-
-        $actionQueueBatchRecord->expects(self::at(12))
-            ->method('__get')
-            ->with(self::equalTo('finished_at'))
-            ->willReturn('2016-04-11 12:22:49');
-
         $actionQueueBatchRecord->expects(self::at(13))
+            ->method('__get')
+            ->with(self::equalTo('finished_at'))
+            ->willReturn('2016-04-11 12:22:49');
+
+        $actionQueueBatchRecord->expects(self::at(14))
+            ->method('__get')
+            ->with(self::equalTo('finished_at'))
+            ->willReturn('2016-04-11 12:22:49');
+
+        $actionQueueBatchRecord->expects(self::at(15))
             ->method('__get')
             ->with(self::equalTo('finished_at_time_zone'))
             ->willReturn('US/Central');
 
-        $actionQueueBatchRecord->expects(self::at(14))
+        $actionQueueBatchRecord->expects(self::at(16))
             ->method('__get')
             ->with(self::equalTo('action_queue_items'))
             ->willReturn([$actionQueueItemRecord]);
@@ -199,6 +209,8 @@ class FetchBatchesServiceTest extends TestCase
 
         self::assertTrue($actionQueueBatchModel->hasStarted());
         self::assertTrue($actionQueueBatchModel->isFinished());
+        self::assertTrue($actionQueueBatchModel->finishedDueToError());
+        self::assertEquals('testError', $actionQueueBatchModel->errorMessage());
 
         self::assertEquals(
             (float) 52,
