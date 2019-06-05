@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2019-06-05
+### Fixed
+- Fixed an issue where the batch model did not have new properties
+
 ## [1.4.0] - 2019-06-05
 ### Added
 - Add an error message column to the batch table and populate it when a batch is marked stopped due to error
