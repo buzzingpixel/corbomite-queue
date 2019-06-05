@@ -11,6 +11,7 @@ use corbomite\queue\data\ActionQueueBatch\ActionQueueBatchRecord;
 use corbomite\queue\data\ActionQueueItem\ActionQueueItemRecord;
 use corbomite\queue\interfaces\ActionQueueItemModelInterface;
 use corbomite\queue\services\MarkAsStoppedDueToErrorService;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -77,6 +78,6 @@ class MarkAsStoppedDueToErrorServiceTest extends TestCase
         $service = new MarkAsStoppedDueToErrorService($ormFactory);
 
         /** @noinspection PhpParamsInspection */
-        self::assertNull($service($model));
+        self::assertNull($service($model, new Exception('Test Message')));
     }
 }

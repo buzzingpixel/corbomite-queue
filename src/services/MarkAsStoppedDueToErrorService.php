@@ -23,12 +23,12 @@ class MarkAsStoppedDueToErrorService
         $this->ormFactory = $ormFactory;
     }
 
-    public function __invoke(ActionQueueItemModelInterface $model) : void
+    public function __invoke(ActionQueueItemModelInterface $model, ?Throwable $e = null) : void
     {
-        $this->markStopped($model);
+        $this->markStopped($model, $e);
     }
 
-    public function markStopped(ActionQueueItemModelInterface $model, ?Throwable $e) : void
+    public function markStopped(ActionQueueItemModelInterface $model, ?Throwable $e = null) : void
     {
         try {
             $dateTime = new DateTime();
